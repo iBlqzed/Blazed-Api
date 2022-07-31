@@ -45,6 +45,14 @@ export function setTickTimeout(callback, tick, loop) {
                 world.events.tick.unsubscribe(tE);
         }
     });
+    return tE;
+}
+/**
+ * Clear a tick timeout
+ * @param {any} timeout Timeout to clear
+ */
+export function clearTickTimeout(timeout) {
+    world.events.tick.unsubscribe(timeout);
 }
 /**
  * Broadcast a message

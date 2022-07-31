@@ -1,4 +1,5 @@
 import { Commands } from "../Commands/index.js";
+import { DatabaseUtils } from "../Database/index.js";
 import * as events from '../Events/index'
 import { Events, ClientOptions } from "../Types/index.js";
 import { World } from "../World/index";
@@ -24,6 +25,10 @@ export class Client {
      * Create and remove game commands
      */
     readonly commands = new Commands()
+    /**
+     * Database utilities
+     */
+    readonly database = new DatabaseUtils()
     /**
      * Listen to an event, and run a callback off of it
      * @param {string} event Event to listen to

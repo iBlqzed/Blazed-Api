@@ -1,4 +1,5 @@
 import { Commands } from "../Commands/index.js";
+import { DatabaseUtils } from "../Database/index.js";
 import * as events from '../Events/index';
 import { World } from "../World/index";
 let isClient = false;
@@ -12,6 +13,10 @@ export class Client {
          * Create and remove game commands
          */
         this.commands = new Commands();
+        /**
+         * Database utilities
+         */
+        this.database = new DatabaseUtils();
         if (isClient)
             throw new Error("There can only be 1 client!");
         isClient = true;

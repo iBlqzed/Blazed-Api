@@ -28,7 +28,7 @@ export function getScore(objective: string, target: Entity | string, useZero?: b
  * console.warn(`This was called after 20 ticks!`)
  * }, 20)
  */
-export function setTickTimeout(callback: () => void, tick: number, loop?: boolean) {
+export function setTickTimeout(callback: () => void, tick: number, loop?: boolean): any {
     let cT = 0
     const tE = world.events.tick.subscribe((data) => {
         if (cT === 0) cT = data.currentTick + tick
@@ -38,7 +38,17 @@ export function setTickTimeout(callback: () => void, tick: number, loop?: boolea
             else world.events.tick.unsubscribe(tE)
         }
     })
+    return tE
 }
+
+/**
+ * Clear a tick timeout
+ * @param {any} timeout Timeout to clear
+ */
+export function clearTickTimeout(timeout: any): void {
+    world.events.tick.unsubscribe(timeout)
+}
+
 /**
  * Broadcast a message
  * @param {string} message Message to broadcast

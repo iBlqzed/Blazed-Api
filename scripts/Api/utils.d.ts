@@ -18,7 +18,12 @@ export declare function getScore(objective: string, target: Entity | string, use
  * console.warn(`This was called after 20 ticks!`)
  * }, 20)
  */
-export declare function setTickTimeout(callback: () => void, tick: number, loop?: boolean): void;
+export declare function setTickTimeout(callback: () => void, tick: number, loop?: boolean): any;
+/**
+ * Clear a tick timeout
+ * @param {any} timeout Timeout to clear
+ */
+export declare function clearTickTimeout(timeout: any): void;
 /**
  * Broadcast a message
  * @param {string} message Message to broadcast
