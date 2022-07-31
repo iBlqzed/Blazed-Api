@@ -4,4 +4,5 @@ export * from './Item/index.js';
 export * from './Client/index.js';
 export * from './World/index.js';
 export * from './utils.js';
+export * from './Database/index.js';
 import './Events/index';

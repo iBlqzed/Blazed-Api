@@ -63,3 +63,27 @@ export declare const locationFunctions: {
      */
     blockLocationToCoords(loc: BlockLocation): [number, number, number];
 };
+/**
+ * Run a command!
+ * @param {string} cmd Command to run
+ * @param {Entity} executor Entity to run the command
+ * @returns {{ error: boolean, data: any }} Whether or not the command errors, and command data
+ * @example runCommand(`give @s diamond`, player)
+ */
+export declare function runCommand(cmd: string, executor?: Entity): {
+    error: boolean;
+    data: any;
+};
+/**
+ * Run an array of commands (if a command starts with "%", then it will be conditional!)
+ * @param {string[]} commands Commands to run
+ * @param {Entity} executor Entity to run all of the commands
+ * @returns {{error: boolean}} Whether or not there was an error running all the commands
+ * @example runCommands([
+ * `testfor @s[hasitem={item=dirt}]`,
+ * `%say I have dirt in my hand!`
+ * ], player)
+ */
+export declare function runCommands(commands: string[], executor?: Entity): {
+    error: boolean;
+};
