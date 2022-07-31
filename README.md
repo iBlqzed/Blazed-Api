@@ -1,2 +1,2 @@
 # GametestWrapper
-My custom blazed wrapper
+My custom gametest wrapper

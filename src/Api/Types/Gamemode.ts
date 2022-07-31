@@ -1,0 +1,1 @@
+export type Gamemode = 'survival' | 'creative' | 'adventure' | 'unknown'
