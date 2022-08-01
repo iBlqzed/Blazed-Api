@@ -1,4 +1,4 @@
-import { Block, BlockPermutation } from "mojang-minecraft"
+import { Block, BlockPermutation, DefinitionModifier } from "mojang-minecraft"
 import { Player, Entity } from "../Entity/index.js"
 import { Item } from "../Item/index.js"
 
@@ -21,6 +21,26 @@ export type Events = {
          */
         cancel(): void
     }
+    BlockHit: {
+        /**
+         * The entity that hit the block
+         */
+        entity: Entity | Player
+        /**
+         * The block that may have been hit
+         */
+        hitBlock: Block
+    }
+    BlockPlace: {
+        /**
+         * Player that placed the block
+         */
+        player: Player
+        /**
+         * Block that was placed
+         */
+        block: Block
+    }
     Chat: {
         /**
          * The player that chatted
@@ -35,16 +55,35 @@ export type Events = {
          */
         cancel(): void
     }
-    BlockPlace: {
+    EntityEvent: {
         /**
-         * Player that placed the block
+         * The entity in this event
          */
-        player: Player
+        entity: Entity,
         /**
-         * Block that was placed
+         * The id of the event
          */
-        block: Block
+        id: string,
+        /**
+         * The event modifiers
+         */
+        modifiers: DefinitionModifier[],
+        /**
+         * Cancel the event
+         */
+        cancel(): void
     }
+    EntityHit: {
+        /**
+         * The entity that hit the entity
+         */
+        entity: Entity | Player
+        /**
+         * The entity that may have been hit
+         */
+        hitEntity: Entity | Player
+    }
+
     ItemUse: {
         /**
          * Entity that used the item
@@ -59,10 +98,6 @@ export type Events = {
          */
         cancel(): void
     }
-    /**
-     * The player that joined
-     */
-    PlayerJoin: Player
     ItemUseOn: {
         /**
          * Entity that used the item
@@ -81,4 +116,8 @@ export type Events = {
          */
         cancel(): void
     }
+    /**
+     * The player that joined
+     */
+    PlayerJoin: Player
 }

@@ -15,7 +15,7 @@ export class Database {
         if (this.name.includes('"'))
             throw new TypeError(`Database names can't include "!`);
         if (this.name.length > 13 || this.name.length === 0)
-            throw new Error(`Database names can't be more than 13 characters long or no characters!`);
+            throw new Error(`Database names can't be more than 13 characters long, and it can't be nothing!`);
         names.push(this.name);
         runCommand(`scoreboard objectives add "DB_${this.name}" dummy`);
         world.scoreboard.getObjective(`DB_${this.name}`).getParticipants().forEach(e => this.data.set(e.displayName.split("_")[0].replaceAll(/\\"/g, '"'), e.displayName.split("_").filter((v, i) => i > 0).join("_").replaceAll(/\\"/g, '"')));
@@ -31,9 +31,9 @@ export class Database {
         if ((JSON.stringify(value).replaceAll(/"/g, '\\"').length + key.replaceAll(/"/g, '\\"').length + 1) > 32000)
             throw new Error(`Database setter to long... somehow`);
         if (this.data.has(key))
-            runCommand(`scoreboard players reset "${key.replaceAll(/"/g, '\\"')}_${this.data.get(key).replaceAll(/"/g, '\\"')}" "DB_${this.name}"`);
+            runCommand(`scoreboard players reset "${key.replaceAll(/"/g, '\\"')}_${JSON.stringify(this.data.get(key)).replaceAll(/"/g, '\\"')}" "DB_${this.name}"`);
         runCommand(`scoreboard players set "${key.replaceAll(/"/g, '\\"')}_${JSON.stringify(value).replaceAll(/"/g, '\\"')}" "DB_${this.name}" 0`);
-        this.data.set(key, JSON.stringify(value));
+        this.data.set(key, value);
     }
     /**
      * Get a value from a key
@@ -41,12 +41,9 @@ export class Database {
      * @returns {any} The value that was set for the key (or undefined)
      */
     get(key) {
-        if (key.includes('_'))
-            throw new TypeError(`Database keys can't include "_"`);
-        const test = this.data.has(key);
-        if (!test)
-            return undefined;
-        return JSON.parse(this.data.get(key));
+        if (this.data.has(key))
+            return this.data.get(key);
+        return undefined;
     }
     /**
      * Test for whether or not the database has the key
@@ -54,8 +51,6 @@ export class Database {
      * @returns {boolean} Whether or not the database has the key
      */
     has(key) {
-        if (key.includes('_'))
-            throw new TypeError(`Database keys can't include "_"`);
         if (!this.data.has(key))
             return false;
         return true;
@@ -65,11 +60,9 @@ export class Database {
      * @param {string} key Key to delete from the database
      */
     delete(key) {
-        if (key.includes('_'))
-            throw new TypeError(`Database keys can't include "_"`);
         if (!this.data.has(key))
             return;
-        runCommand(`scoreboard players reset "${key.replaceAll(/"/g, '\\"')}_${this.data.get(key).replaceAll(/"/g, '\\"')}" "DB_${this.name}"`);
+        runCommand(`scoreboard players reset "${key.replaceAll(/"/g, '\\"')}_${JSON.stringify(this.data.get(key)).replaceAll(/"/g, '\\"')}" "DB_${this.name}"`);
         this.data.delete(key);
     }
     /**
@@ -84,7 +77,7 @@ export class Database {
      * @returns {any[]} An array of all values in the database
      */
     values() {
-        return [...this.data.values()].map(e => JSON.parse(e));
+        return [...this.data.values()];
     }
     /**
      * Clears all values in the database
@@ -92,13 +85,14 @@ export class Database {
     clear() {
         runCommand(`scoreboard objectives remove "DB_${this.name}"`);
         runCommand(`scoreboard objectives add "DB_${this.name}" dummy`);
+        this.data.clear();
     }
     /**
      * Loop through all keys and values of the database
      * @param {(key: string, value: any) => void} callback Code to run per loop
      */
     forEach(callback) {
-        this.data.forEach((v, k) => callback(k, JSON.parse(v)));
+        this.data.forEach((v, k) => callback(k, v));
     }
 }
 /**

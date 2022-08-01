@@ -1,4 +1,3 @@
-import { world } from "mojang-minecraft";
 import { runCommand } from "../utils";
 import { Database } from "./Database";
 
@@ -13,9 +12,9 @@ export class DatabaseUtils {
     }
     /**
      * Delete a database
-     * @param {string} databaseName Database to delete
+     * @param {Database|string} database Database (or database name) to delete
      */
-    delete(databaseName: string): void {
-        runCommand(`scoreboard objectives remove "DB_${JSON.stringify(databaseName).slice(1, -1).replaceAll(/"/g, '\\"')}"`)
+    delete(database: Database | string): void {
+        runCommand(`scoreboard objectives remove "DB_${database instanceof Database ? database.name : JSON.stringify(database).slice(1, -1).replaceAll(/"/g, '\\"')}"`)
     }
 }

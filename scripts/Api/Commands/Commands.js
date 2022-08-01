@@ -1,6 +1,3 @@
-import { Player } from "../Entity/index";
-import { world } from 'mojang-minecraft';
-import { broadcastMessage } from '../utils';
 export class Commands {
     constructor(options) {
         Commands.options = options;
@@ -53,18 +50,3 @@ export class Commands {
     }
 }
 Commands.registeredCommands = [];
-const arg = world.events.beforeChat.subscribe(data => {
-    if (!Commands.options?.command.enabled)
-        return world.events.beforeChat.unsubscribe(arg);
-    if (data.message.startsWith(Commands.options?.command?.prefix ?? '-')) {
-        data.cancel = true;
-        const args = data.message.trim().slice((Commands.options?.command?.prefix ?? '-').length).split(/\s+/g);
-        const cmd = args.shift().toLowerCase();
-        const cmdData = Commands.registeredCommands.find(command => command.name === cmd || command.aliases?.includes(cmd));
-        if (!cmdData)
-            return broadcastMessage(Commands.options?.command?.invalidCommandError ?? `§cInvalid command!`);
-        if (cmdData.permissions && cmdData.permissions.find(tag => !data.sender.hasTag(tag)))
-            return broadcastMessage(Commands.options?.command.invalidPermissionsError ?? `§cInvalid permission!`);
-        cmdData.callback({ player: new Player(data.sender), args });
-    }
-});

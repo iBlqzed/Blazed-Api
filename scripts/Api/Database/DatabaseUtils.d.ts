@@ -8,7 +8,7 @@ export declare class DatabaseUtils {
     create(name: string): Database;
     /**
      * Delete a database
-     * @param {string} databaseName Database to delete
+     * @param {Database|string} database Database (or database name) to delete
      */
-    delete(databaseName: string): void;
+    delete(database: Database | string): void;
 }

@@ -2,8 +2,11 @@
  * Database
  */
 export declare class Database {
-    readonly name: string;
     protected readonly data: Map<string, string>;
+    /**
+     * The name of the database
+     */
+    readonly name: string;
     /**
      * Create a new database!
      */
