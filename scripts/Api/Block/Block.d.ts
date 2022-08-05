@@ -1,4 +1,4 @@
-import type { Block as IBlock, BlockLocation, BlockType } from "mojang-minecraft";
+import type { Block as IBlock, BlockLocation, BlockPermutation, BlockType } from "mojang-minecraft";
 import { Dimension } from "../World/index";
 export declare class Block {
     protected readonly block: IBlock;
@@ -18,5 +18,24 @@ export declare class Block {
      * The block type
      */
     readonly type: BlockType;
+    /**
+     * The block permutation
+     */
+    readonly permutation: BlockPermutation;
     constructor(block: IBlock);
+    /**
+     * Get a component from the block
+     * @param {string} comp The component to get
+     * @returns {any} The component
+     */
+    getComponent(comp: string): any;
+    /**
+     *
+     * @returns {string[]} All the block's tags
+     */
+    getTags(): string[];
+    hasTag(tag: string): boolean;
+    isEmpty(): boolean;
+    get waterLogged(): boolean;
+    set waterLogged(waterLogged: boolean);
 }

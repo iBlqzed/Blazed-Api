@@ -7,26 +7,7 @@ import { Events, ClientOptions } from "../Types/index.js";
 import { broadcastMessage } from "../utils.js";
 import { World } from "../World/index";
 
-let isClient = false
-
 export class Client {
-    constructor(options?: ClientOptions) {
-        if (isClient) throw new Error("There can only be 1 client!")
-        isClient = true
-        this.options = options
-        this.commands = new Commands(options)
-        if (options?.command?.enabled) world.events.beforeChat.subscribe(data => {
-            if (!data.message.startsWith(Commands.options?.command?.prefix ?? '-')) return;
-            data.cancel = true
-            const args = data.message.trim().slice((Commands.options?.command?.prefix ?? '-').length).split(/\s+/g)
-            const cmd = args.shift().toLowerCase()
-            const cmdData = Commands.registeredCommands.find(command => command.name === cmd || command.aliases?.includes(cmd))
-            if (!cmdData) return broadcastMessage(Commands.options?.command?.invalidCommandError ?? `§cInvalid command!`)
-            if (cmdData.permissions && cmdData.permissions.find(tag => !data.sender.hasTag(tag))) return broadcastMessage(Commands.options?.command.invalidPermissionsError ?? `§cInvalid permission!`)
-            cmdData.callback({ player: new Player(data.sender), args })
-        })
-
-    }
     /**
      * The client options
      */
@@ -43,6 +24,21 @@ export class Client {
      * Database utilities
      */
     readonly database = new DatabaseUtils()
+    constructor(options?: ClientOptions) {
+        this.options = options
+        this.commands = new Commands(options)
+        if (options?.command?.enabled) world.events.beforeChat.subscribe(data => {
+            if (!data.message.startsWith(Commands.options?.command?.prefix ?? '-')) return;
+            data.cancel = true
+            const args = data.message.trim().slice((Commands.options?.command?.prefix ?? '-').length).split(/\s+/g)
+            const cmd = args.shift().toLowerCase()
+            const cmdData = Commands.registeredCommands.find(command => command.name === cmd || command.aliases?.includes(cmd))
+            if (!cmdData) return broadcastMessage(Commands.options?.command?.invalidCommandError ?? `§cInvalid command!`)
+            if (cmdData.permissions && cmdData.permissions.find(tag => !data.sender.hasTag(tag))) return broadcastMessage(Commands.options?.command.invalidPermissionsError ?? `§cInvalid permission!`)
+            cmdData.callback({ player: new Player(data.sender), args })
+        })
+
+    }
     /**
      * Listen to an event, and run a callback off of it
      * @param {string} event Event to listen to
@@ -70,5 +66,17 @@ export class Client {
             callback(data)
             events[event].off()
         })
+    }
+    /**
+     * Run a command
+     * @param {string} cmd Command to run
+     * @returns {{error: boolean, data: any}} Command error + data
+     */
+    runCommand(cmd: string): { error: boolean, data: any } {
+        try {
+            return { error: false, data: world.getDimension('overworld').runCommand(cmd) }
+        } catch {
+            return { error: true, data: undefined }
+        }
     }
 }

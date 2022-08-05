@@ -1,4 +1,4 @@
-import { Player } from "../Entity/index";
+import type { Player } from "../Entity/index";
 export interface CommandInfo {
     /**
      * The name of the command

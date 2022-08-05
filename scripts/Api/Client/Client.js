@@ -5,7 +5,6 @@ import { Player } from "../Entity/index.js";
 import * as events from '../Events/index';
 import { broadcastMessage } from "../utils.js";
 import { World } from "../World/index";
-let isClient = false;
 export class Client {
     constructor(options) {
         /**
@@ -20,9 +19,6 @@ export class Client {
          * Database utilities
          */
         this.database = new DatabaseUtils();
-        if (isClient)
-            throw new Error("There can only be 1 client!");
-        isClient = true;
         this.options = options;
         this.commands = new Commands(options);
         if (options?.command?.enabled)
@@ -67,5 +63,18 @@ export class Client {
             callback(data);
             events[event].off();
         });
+    }
+    /**
+     * Run a command
+     * @param {string} cmd Command to run
+     * @returns {{error: boolean, data: any}} Command error + data
+     */
+    runCommand(cmd) {
+        try {
+            return { error: false, data: world.getDimension('overworld').runCommand(cmd) };
+        }
+        catch {
+            return { error: true, data: undefined };
+        }
     }
 }

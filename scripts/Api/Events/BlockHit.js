@@ -1,7 +1,7 @@
 import { world } from "mojang-minecraft";
 import { Player, Entity } from "../Entity/index";
 let arg;
-export class EntityHit {
+export class BlockHit {
     /**
      * Add a listener for the event
      */
@@ -10,10 +10,10 @@ export class EntityHit {
             return;
         this.registered = true;
         arg = world.events.entityHit.subscribe(data => {
-            if (data.hitEntity)
+            if (data.hitBlock)
                 callback({
                     entity: data.entity.id === 'minecraft:player' ? new Player(data.entity) : new Entity(data.entity),
-                    hitEntity: data.hitEntity.id === 'minecraft:player' ? new Player(data.hitEntity) : new Entity(data.hitEntity)
+                    hitBlock: data.hitBlock
                 });
         });
     }
@@ -30,4 +30,4 @@ export class EntityHit {
 /**
  * Whether or not the event has been registered
  */
-EntityHit.registered = false;
+BlockHit.registered = false;

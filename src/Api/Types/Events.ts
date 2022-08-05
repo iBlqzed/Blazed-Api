@@ -1,6 +1,7 @@
-import { Block, BlockPermutation, DefinitionModifier } from "mojang-minecraft"
-import { Player, Entity } from "../Entity/index.js"
-import { Item } from "../Item/index.js"
+import type { Block, BlockPermutation, DefinitionModifier } from "mojang-minecraft"
+import type { Player, Entity } from "../Entity/index.js"
+import type { Item } from "../Item/index.js"
+import type { World } from "../World/index.js"
 
 export type Events = {
     BlockBreak: {
@@ -25,7 +26,7 @@ export type Events = {
         /**
          * The entity that hit the block
          */
-        entity: Entity | Player
+        entity: Entity
         /**
          * The block that may have been hit
          */
@@ -77,18 +78,17 @@ export type Events = {
         /**
          * The entity that hit the entity
          */
-        entity: Entity | Player
+        entity: Entity
         /**
          * The entity that may have been hit
          */
-        hitEntity: Entity | Player
+        hitEntity: Entity
     }
-
     ItemUse: {
         /**
          * Entity that used the item
          */
-        entity: Entity | Player
+        entity: Entity
         /**
          * Item that was used
          */
@@ -102,7 +102,7 @@ export type Events = {
         /**
          * Entity that used the item
          */
-        entity: Entity | Player
+        entity: Entity
         /**
          * Item that was used
          */
@@ -120,4 +120,12 @@ export type Events = {
      * The player that joined
      */
     PlayerJoin: Player
+    /**
+     * Runs every tick
+     */
+    Tick: void
+    /**
+     * The loaded world
+     */
+    WorldLoad: World
 }

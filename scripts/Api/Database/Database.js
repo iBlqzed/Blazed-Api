@@ -21,6 +21,12 @@ export class Database {
         world.scoreboard.getObjective(`DB_${this.name}`).getParticipants().forEach(e => this.data.set(e.displayName.split("_")[0].replaceAll(/\\"/g, '"'), e.displayName.split("_").filter((v, i) => i > 0).join("_").replaceAll(/\\"/g, '"')));
     }
     /**
+     * The length of the database
+     */
+    get length() {
+        return this.data.size;
+    }
+    /**
      * Set a value from a key
      * @param {string} key Key to set
      * @param {any} value The value
@@ -93,6 +99,9 @@ export class Database {
      */
     forEach(callback) {
         this.data.forEach((v, k) => callback(k, v));
+    }
+    *[Symbol.iterator]() {
+        yield* this.data.entries();
     }
 }
 /**

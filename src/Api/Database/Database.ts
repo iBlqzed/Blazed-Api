@@ -7,11 +7,11 @@ const names: string[] = []
  * Database
  */
 export class Database {
-    protected readonly data: Map<string, string> = new Map()
+    protected readonly data: Map<string, any> = new Map()
     /**
      * The name of the database
      */
-    readonly name: string;
+    readonly name: string
     /**
      * Create a new database!
      */
@@ -23,6 +23,12 @@ export class Database {
         names.push(this.name)
         runCommand(`scoreboard objectives add "DB_${this.name}" dummy`)
         world.scoreboard.getObjective(`DB_${this.name}`).getParticipants().forEach(e => this.data.set(e.displayName.split("_")[0].replaceAll(/\\"/g, '"'), e.displayName.split("_").filter((v, i) => i > 0).join("_").replaceAll(/\\"/g, '"')))
+    }
+    /**
+     * The length of the database
+     */
+    get length(): number {
+        return this.data.size
     }
     /**
      * Set a value from a key
@@ -91,6 +97,9 @@ export class Database {
      */
     forEach(callback: (key: string, value: any) => void) {
         this.data.forEach((v, k) => callback(k, v))
+    }
+    *[Symbol.iterator](): IterableIterator<[string, any]> {
+        yield* this.data.entries()
     }
 }
 

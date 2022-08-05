@@ -1,5 +1,3 @@
-import { ItemStack } from "mojang-minecraft"
-
 export type ClientOptions = {
     command: {
         enabled?: boolean

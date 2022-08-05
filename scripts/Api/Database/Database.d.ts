@@ -2,7 +2,7 @@
  * Database
  */
 export declare class Database {
-    protected readonly data: Map<string, string>;
+    protected readonly data: Map<string, any>;
     /**
      * The name of the database
      */
@@ -11,6 +11,10 @@ export declare class Database {
      * Create a new database!
      */
     constructor(name: string);
+    /**
+     * The length of the database
+     */
+    get length(): number;
     /**
      * Set a value from a key
      * @param {string} key Key to set
@@ -53,4 +57,5 @@ export declare class Database {
      * @param {(key: string, value: any) => void} callback Code to run per loop
      */
     forEach(callback: (key: string, value: any) => void): void;
+    [Symbol.iterator](): IterableIterator<[string, any]>;
 }
