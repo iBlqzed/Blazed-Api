@@ -22,7 +22,7 @@ export class Database {
         if (this.name.length > 13 || this.name.length === 0) throw new Error(`Database names can't be more than 13 characters long, and it can't be nothing!`)
         names.push(this.name)
         runCommand(`scoreboard objectives add "DB_${this.name}" dummy`)
-        world.scoreboard.getObjective(`DB_${this.name}`).getParticipants().forEach(e => this.data.set(e.displayName.split("_")[0].replaceAll(/\\"/g, '"'), e.displayName.split("_").filter((v, i) => i > 0).join("_").replaceAll(/\\"/g, '"')))
+        world.scoreboard.getObjective(`DB_${this.name}`).getParticipants().forEach(e => this.data.set(e.displayName.split("_")[0].replaceAll(/\\"/g, '"'), JSON.parse(e.displayName.split("_").filter((v, i) => i > 0).join("_").replaceAll(/\\"/g, '"'))))
     }
     /**
      * The length of the database

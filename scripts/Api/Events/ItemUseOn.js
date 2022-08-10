@@ -10,15 +10,30 @@ export class ItemUseOn {
         if (this.registered)
             return;
         this.registered = true;
+        const log = {};
         arg = world.events.beforeItemUseOn.subscribe(data => {
-            callback({
-                entity: data.source.id === 'minecraft:player' ? new Player(data.source) : new Entity(data.source),
-                item: new Item(data.item),
-                block: data.source.dimension.getBlock(data.blockLocation),
-                cancel() {
-                    data.cancel = true;
-                }
-            });
+            if (data.source.id === "minecraft:player") {
+                const oldLog = log[data.source.name] ?? Date.now() - 102;
+                log[data.source.name] = Date.now();
+                if ((oldLog + 100) < Date.now())
+                    callback({
+                        entity: new Player(data.source),
+                        item: new Item(data.item),
+                        block: data.source.dimension.getBlock(data.blockLocation),
+                        cancel() {
+                            data.cancel = true;
+                        }
+                    });
+            }
+            else
+                callback({
+                    entity: new Entity(data.source),
+                    item: new Item(data.item),
+                    block: data.source.dimension.getBlock(data.blockLocation),
+                    cancel() {
+                        data.cancel = true;
+                    }
+                });
         });
     }
     /**

@@ -92,3 +92,9 @@ export declare function runCommand(cmd: string, executor?: Entity): {
 export declare function runCommands(commands: string[], executor?: Entity): {
     error: boolean;
 };
+/**
+ * Wait a certain amount of ticks
+ * @param {number} ticks Amount of ticks to wait
+ * @returns {Promise<void>} No need to mess with this
+ */
+export declare function wait(ticks: number): Promise<void>;

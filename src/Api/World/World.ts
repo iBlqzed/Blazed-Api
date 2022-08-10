@@ -19,4 +19,11 @@ export class World {
     getDimension(dimension: DimensionType): Dimension {
         return new Dimension(world.getDimension(dimension))
     }
+    /**
+     * Get the current tick (kinda like Date.now() but ticks)
+     * @returns {Promise<number>} The current tick
+     */
+    async getCurrentTick(): Promise<number> {
+        return await new Promise(resolve => world.events.tick.subscribe(({ currentTick }) => resolve(currentTick)))
+    }
 }

@@ -120,6 +120,10 @@ export declare type Events = {
      */
     PlayerJoin: Player;
     /**
+     * The name of the player who left
+     */
+    PlayerLeave: string;
+    /**
      * Runs every tick
      */
     Tick: void;

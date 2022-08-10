@@ -254,6 +254,11 @@ export declare class Player extends Entity {
     get heldItem(): Item;
     set heldItem(item: Item);
     /**
+     * Kick the player
+     * @param {string} reason The reason they got kicked
+     */
+    kick(reason?: string): void;
+    /**
      * Message the player
      * @param {string} msg The message to send to the player
      */
@@ -263,7 +268,10 @@ export declare class Player extends Entity {
      * @param {string} command Command to run (includes custom commands)
      * @returns {any} Command data + error
      */
-    runCommand(command: string): any;
+    runCommand(command: string): {
+        error: boolean;
+        data?: any;
+    };
     /**
      * Show a form to the player
      * @param {ActionFormData | ModalFormData | MessageFormData} form Form to show to the player

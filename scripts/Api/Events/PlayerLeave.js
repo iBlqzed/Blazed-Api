@@ -1,6 +1,6 @@
 import { world } from "mojang-minecraft";
 let arg;
-export class EntityEvent {
+export class PlayerLeave {
     /**
      * Add a listener for the event
      */
@@ -8,7 +8,7 @@ export class EntityEvent {
         if (this.registered)
             return;
         this.registered = true;
-        const deadPlayers = [];
+        arg = world.events.playerLeave.subscribe(data => callback(data.playerName));
     }
     /**
      * Remove the listener for the event
@@ -16,11 +16,11 @@ export class EntityEvent {
     static off() {
         if (!this.registered)
             return;
-        world.events.tick.unsubscribe(arg);
+        world.events.playerLeave.unsubscribe(arg);
         this.registered = false;
     }
 }
 /**
  * Whether or not the event has been registered
  */
-EntityEvent.registered = false;
+PlayerLeave.registered = false;

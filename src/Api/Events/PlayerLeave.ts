@@ -1,10 +1,9 @@
-import { EntityHealthComponent, world } from "mojang-minecraft"
-import { Entity } from "../Entity/index.js"
+import { world } from "mojang-minecraft"
 import { Events } from "../Types/index.js"
 
 let arg: any
 
-export class EntityEvent {
+export class PlayerLeave {
     /**
      * Whether or not the event has been registered
      */
@@ -12,17 +11,17 @@ export class EntityEvent {
     /**
      * Add a listener for the event
      */
-    static on(callback: (data: any) => void): void {
+    static on(callback: (data: Events['PlayerLeave']) => void): void {
         if (this.registered) return
         this.registered = true
-        const deadPlayers = [] as string[]
+        arg = world.events.playerLeave.subscribe(data => callback(data.playerName))
     }
     /**
      * Remove the listener for the event
      */
     static off(): void {
         if (!this.registered) return
-        world.events.tick.unsubscribe(arg)
+        world.events.playerLeave.unsubscribe(arg)
         this.registered = false
     }
 }

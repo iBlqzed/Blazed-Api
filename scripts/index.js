@@ -1,5 +1,2 @@
-import { Client } from "./Api/index";
-const client = new Client();
-client.on('ItemUse', data => {
-    console.warn(data.entity.id);
-});
+import { Client } from "./Api/index.js";
+export const client = new Client();

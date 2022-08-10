@@ -329,6 +329,13 @@ export class Player extends Entity {
         this.inventory.setItem(this.entity.selectedSlot, item);
     }
     /**
+     * Kick the player
+     * @param {string} reason The reason they got kicked
+     */
+    kick(reason) {
+        this.entity.runCommand(`kick "${this.entity.name}" ${reason ?? ''}`);
+    }
+    /**
      * Message the player
      * @param {string} msg The message to send to the player
      */
@@ -343,12 +350,14 @@ export class Player extends Entity {
     runCommand(command) {
         try {
             if (!Commands.options?.command?.enabled)
-                return { error: false, ...this.entity.runCommand(command) };
+                return { error: false, data: this.entity.runCommand(command) };
+            if (command.startsWith('/'))
+                return { error: false, data: this.entity.runCommand(command.slice(1)) };
             const args = command.trim().split(/\s+/g);
             const cmdName = args.shift().toLowerCase();
             const data = Commands.registeredCommands.find(cmd => cmd.name === cmdName || cmd.aliases?.includes(cmdName));
             if (!data)
-                return { error: false, ...this.entity.runCommand(command) };
+                return { error: false, data: this.entity.runCommand(command) };
             data.callback({ player: this, args });
             return { error: false };
         }

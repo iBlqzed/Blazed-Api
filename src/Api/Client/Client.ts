@@ -79,4 +79,7 @@ export class Client {
             return { error: true, data: undefined }
         }
     }
+    broadcast(message: string): void {
+        this.runCommand(`tellraw @a {"rawtext":[{"text":${JSON.stringify(message)}}]}`)
+    }
 }

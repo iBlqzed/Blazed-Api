@@ -46,4 +46,5 @@ export declare class Client {
         error: boolean;
         data: any;
     };
+    broadcast(message: string): void;
 }

@@ -6,6 +6,8 @@ export * from './EntityEvent';
 export * from './EntityHit';
 export * from './ItemUse';
 export * from './ItemUseOn';
+export * from './PlayerDeath';
 export * from './PlayerJoin';
+export * from './PlayerLeave';
 export * from './Tick';
 export * from './WorldLoad';

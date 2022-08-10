@@ -156,3 +156,21 @@ export function runCommands(commands, executor) {
         return { error: true };
     }
 }
+/**
+ * Wait a certain amount of ticks
+ * @param {number} ticks Amount of ticks to wait
+ * @returns {Promise<void>} No need to mess with this
+ */
+export async function wait(ticks) {
+    let t = 0;
+    return await new Promise(resolve => {
+        const event = world.events.tick.subscribe(({ currentTick }) => {
+            if (t === 0)
+                t = currentTick + ticks;
+            if (!(t < currentTick))
+                return;
+            world.events.tick.unsubscribe(event);
+            resolve();
+        });
+    });
+}

@@ -13,4 +13,9 @@ export declare class World {
      * @returns {Dimension} The actual dimension
      */
     getDimension(dimension: DimensionType): Dimension;
+    /**
+     * Get the current tick (kinda like Date.now() but ticks)
+     * @returns {Promise<number>} The current tick
+     */
+    getCurrentTick(): Promise<number>;
 }
