@@ -1,2 +1,2 @@
-# GametestWrapper
-My custom gametest wrapper
+# Blazed Api
+The bBazed Api for Bedrock Gametest
