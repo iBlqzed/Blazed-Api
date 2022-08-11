@@ -1,2 +1,2 @@
 # Blazed Api
-The bBazed Api for Bedrock Gametest
+The Blazed Api for Bedrock Gametest
