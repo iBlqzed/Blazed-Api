@@ -1,6 +1,7 @@
-import { world } from "mojang-minecraft"
+import { Player as IPlayer, world } from "mojang-minecraft"
 import { Entity } from "../Entity/index.js"
 import { Events } from "../Types/index.js"
+import { Player } from "../Entity/index.js"
 
 export class EntityEvent {
     /**
@@ -13,7 +14,7 @@ export class EntityEvent {
     on(callback: (data: Events['EntityEvent']) => void): EntityEvent {
         this.arg = world.events.beforeDataDrivenEntityTriggerEvent.subscribe(data => {
             callback({
-                entity: new Entity(data.entity),
+                entity: data.entity.id === 'minecraft:player' ? new Player(data.entity as IPlayer) : new Entity(data.entity),
                 modifiers: data.modifiers,
                 id: data.id,
                 cancel(): void {

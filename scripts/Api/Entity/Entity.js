@@ -1,24 +1,7 @@
 import { MinecraftEffectTypes, world } from "mojang-minecraft";
 import { Commands } from "../Commands/index.js";
 import { EntityInventory } from "../Inventory/index.js";
-import { setTickTimeout } from "../utils.js";
 import { Dimension } from "../World/index.js";
-export const allPlayers = [];
-const playerLog = new Map();
-setTickTimeout(() => {
-    for (const player of world.getPlayers()) {
-        playerLog.set(player.name, new Map());
-        allPlayers.push(new Player(player));
-    }
-}, 0);
-world.events.playerLeave.subscribe(({ playerName }) => {
-    playerLog.delete(playerName);
-    allPlayers.splice(allPlayers.findIndex(plr => plr.getName() === playerName), 1);
-});
-world.events.playerJoin.subscribe(({ player }) => {
-    playerLog.set(player.name, new Map());
-    allPlayers.push(new Player(player));
-});
 export class Entity {
     constructor(entity) {
         this.entity = entity;
@@ -234,6 +217,13 @@ export class Entity {
         return this.entity.hasTag(tag);
     }
     /**
+     * Whether or not the entity is a player
+     * @returns {Player} The entity but player
+     */
+    isPlayer() {
+        return this.getId() === "minecraft:player";
+    }
+    /**
      * Kill the entity
      */
     kill() {
@@ -367,6 +357,19 @@ export class Player extends Entity {
         this.runCommand(`/xp ${amount}L @s`);
     }
     /**
+     * Clear the player's spawn point
+     */
+    clearRespawnPoint() {
+        this.runCommand(`/clearspawnpoint @s`);
+    }
+    /**
+     * Clear the player's title
+     * @remarks Only clears title and subtitle, not actionbar
+     */
+    clearTitle() {
+        this.runCommand(`/title @s clear`);
+    }
+    /**
      * Get the player's gamemode
      * @returns {Gamemode} The player's gamemode
      */
@@ -397,6 +400,10 @@ export class Player extends Entity {
     getItemCooldown(itemCatagory) {
         return this.entity.getItemCooldown(itemCatagory);
     }
+    /**
+     * Get the player's log (like a map attached to the player)
+     * @returns {PlayerLog} The player's log
+     */
     getLog() {
         return new PlayerLog(this.entity.name);
     }
@@ -603,3 +610,17 @@ class PlayerLog {
         return this._size;
     }
 }
+export const allPlayers = [];
+const playerLog = new Map();
+for (const player of world.getPlayers()) {
+    playerLog.set(player.name, new Map());
+    allPlayers.push(new Player(player));
+}
+world.events.playerLeave.subscribe(({ playerName }) => {
+    playerLog.delete(playerName);
+    allPlayers.splice(allPlayers.findIndex(plr => plr.getName() === playerName), 1);
+});
+world.events.playerJoin.subscribe(({ player }) => {
+    playerLog.set(player.name, new Map());
+    allPlayers.push(new Player(player));
+});

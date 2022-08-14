@@ -1,10 +1,9 @@
-import { Block, BlockRaycastOptions, CommandResult, Effect, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, Player as IPlayer, ScreenDisplay, Vector, XYRotation } from "mojang-minecraft";
-import type { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "mojang-minecraft-ui";
+import { Player as IPlayer, Block, BlockRaycastOptions, CommandResult, Effect, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, XYRotation } from "mojang-minecraft";
+import { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "mojang-minecraft-ui";
 import { EntityInventory } from "../Inventory/index.js";
-import type { Item } from "../Item/index.js";
+import { Item } from "../Item/index.js";
 import type { Gamemode, EntityComponents } from "../Types/index.js";
 import { Dimension } from "../World/index.js";
-export declare const allPlayers: Player[];
 export declare class Entity {
     /**
      * The entity
@@ -51,7 +50,7 @@ export declare class Entity {
      * @param {string} component Component to get from the entity
      * @returns {IEntityComponent} The component
      */
-    getComponent<componentName extends keyof EntityComponents, component extends EntityComponents[componentName]>(component: componentName): component;
+    getComponent<componentName extends keyof EntityComponents>(component: componentName): EntityComponents[componentName];
     /**
      * Get all components that the entity has
      * @returns {IEntityComponent[]} All components of the entity
@@ -160,6 +159,11 @@ export declare class Entity {
      */
     hasTag(tag: string): boolean;
     /**
+     * Whether or not the entity is a player
+     * @returns {Player} The entity but player
+     */
+    isPlayer(): this is Player;
+    /**
      * Kill the entity
      */
     kill(): void;
@@ -254,6 +258,15 @@ export declare class Player extends Entity {
      */
     addXpLevels(amount: number): void;
     /**
+     * Clear the player's spawn point
+     */
+    clearRespawnPoint(): void;
+    /**
+     * Clear the player's title
+     * @remarks Only clears title and subtitle, not actionbar
+     */
+    clearTitle(): void;
+    /**
      * Get the player's gamemode
      * @returns {Gamemode} The player's gamemode
      */
@@ -269,6 +282,10 @@ export declare class Player extends Entity {
      * @returns {number} The length of that cooldown
      */
     getItemCooldown(itemCatagory: string): number;
+    /**
+     * Get the player's log (like a map attached to the player)
+     * @returns {PlayerLog} The player's log
+     */
     getLog(): PlayerLog;
     /**
      * Get the player's name
@@ -349,7 +366,7 @@ export declare class Player extends Entity {
      * @param {ActionFormData | ModalFormData | MessageFormData} form Form to show to the player
      * @param {(response: ActionFormResponse | ModalFormResponse | MessageFormResponse) => void} callback Code to run when the form is shown
      */
-    showForm<form extends ActionFormData | ModalFormData | MessageFormData, response extends (response: form extends ActionFormData ? ActionFormResponse : form extends ModalFormData ? ModalFormResponse : form extends MessageFormData ? MessageFormResponse : null) => void>(form: form, callback: response): void;
+    showForm<form extends ActionFormData | ModalFormData | MessageFormData, response extends (response: form extends ActionFormData ? ActionFormResponse : form extends ModalFormData ? ModalFormResponse : form extends MessageFormData ? MessageFormResponse : undefined) => void>(form: form, callback: response): void;
 }
 declare class PlayerLog {
     protected name: string;
@@ -404,4 +421,5 @@ declare class PlayerLog {
      */
     getSize(): number;
 }
+export declare const allPlayers: Player[];
 export {};

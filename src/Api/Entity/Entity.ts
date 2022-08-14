@@ -1,31 +1,10 @@
-import { Block, BlockRaycastOptions, CommandResult, Effect, EffectType, Entity as IEntity, EntityRaycastOptions, IEntityComponent, InventoryComponentContainer, ItemStack, Location, MinecraftEffectTypes, Player as IPlayer, ScoreboardIdentity, ScreenDisplay, TicksPerSecond, Vector, world, XYRotation } from "mojang-minecraft"
-import type { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "mojang-minecraft-ui"
+import { Player as IPlayer, Block, BlockRaycastOptions, CommandResult, Effect, EffectType, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, world, XYRotation } from "mojang-minecraft"
+import { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "mojang-minecraft-ui"
 import { Commands } from "../Commands/index.js"
 import { EntityInventory } from "../Inventory/index.js"
-import type { Item } from "../Item/index.js"
+import { Item } from "../Item/index.js"
 import type { Gamemode, EntityComponents } from "../Types/index.js"
-import { setTickTimeout } from "../utils.js"
 import { Dimension } from "../World/index.js"
-
-export const allPlayers = [] as Player[]
-const playerLog: Map<string, Map<any, any>> = new Map()
-
-setTickTimeout(() => {
-    for (const player of world.getPlayers()) {
-        playerLog.set(player.name, new Map())
-        allPlayers.push(new Player(player))
-    }
-}, 0)
-
-world.events.playerLeave.subscribe(({ playerName }) => {
-    playerLog.delete(playerName)
-    allPlayers.splice(allPlayers.findIndex(plr => plr.getName() === playerName), 1)
-})
-
-world.events.playerJoin.subscribe(({ player }) => {
-    playerLog.set(player.name, new Map())
-    allPlayers.push(new Player(player))
-})
 
 export class Entity {
     /**
@@ -85,7 +64,7 @@ export class Entity {
      * @param {string} component Component to get from the entity
      * @returns {IEntityComponent} The component
      */
-    getComponent<componentName extends keyof EntityComponents, component extends EntityComponents[componentName]>(component: componentName): component {
+    getComponent<componentName extends keyof EntityComponents>(component: componentName): EntityComponents[componentName] {
         //@ts-ignore
         return this.entity.getComponent(component) as any
     }
@@ -242,6 +221,13 @@ export class Entity {
         return this.entity.hasTag(tag)
     }
     /**
+     * Whether or not the entity is a player
+     * @returns {Player} The entity but player
+     */
+    isPlayer(): this is Player {
+        return this.getId() === "minecraft:player"
+    }
+    /**
      * Kill the entity
      */
     kill(): void {
@@ -374,6 +360,19 @@ export class Player extends Entity {
         this.runCommand(`/xp ${amount}L @s`)
     }
     /**
+     * Clear the player's spawn point
+     */
+    clearRespawnPoint(): void {
+        this.runCommand(`/clearspawnpoint @s`)
+    }
+    /**
+     * Clear the player's title
+     * @remarks Only clears title and subtitle, not actionbar
+     */
+    clearTitle(): void {
+        this.runCommand(`/title @s clear`)
+    }
+    /**
      * Get the player's gamemode
      * @returns {Gamemode} The player's gamemode
      */
@@ -401,6 +400,10 @@ export class Player extends Entity {
     getItemCooldown(itemCatagory: string): number {
         return this.entity.getItemCooldown(itemCatagory)
     }
+    /**
+     * Get the player's log (like a map attached to the player)
+     * @returns {PlayerLog} The player's log
+     */
     getLog(): PlayerLog {
         return new PlayerLog(this.entity.name)
     }
@@ -519,7 +522,7 @@ export class Player extends Entity {
      * @param {ActionFormData | ModalFormData | MessageFormData} form Form to show to the player
      * @param {(response: ActionFormResponse | ModalFormResponse | MessageFormResponse) => void} callback Code to run when the form is shown
      */
-    showForm<form extends ActionFormData | ModalFormData | MessageFormData, response extends (response: form extends ActionFormData ? ActionFormResponse : form extends ModalFormData ? ModalFormResponse : form extends MessageFormData ? MessageFormResponse : null) => void>(form: form, callback: response) {
+    showForm<form extends ActionFormData | ModalFormData | MessageFormData, response extends (response: form extends ActionFormData ? ActionFormResponse : form extends ModalFormData ? ModalFormResponse : form extends MessageFormData ? MessageFormResponse : undefined) => void>(form: form, callback: response) {
         form.show(this.entity).then(result => {
             // @ts-ignore
             callback(result)
@@ -605,3 +608,21 @@ class PlayerLog {
         return this._size
     }
 }
+
+export const allPlayers = [] as Player[]
+const playerLog: Map<string, Map<any, any>> = new Map()
+
+for (const player of world.getPlayers()) {
+    playerLog.set(player.name, new Map())
+    allPlayers.push(new Player(player))
+}
+
+world.events.playerLeave.subscribe(({ playerName }) => {
+    playerLog.delete(playerName)
+    allPlayers.splice(allPlayers.findIndex(plr => plr.getName() === playerName), 1)
+})
+
+world.events.playerJoin.subscribe(({ player }) => {
+    playerLog.set(player.name, new Map())
+    allPlayers.push(new Player(player))
+})
