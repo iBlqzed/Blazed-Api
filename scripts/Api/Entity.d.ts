@@ -1,4 +1,4 @@
-import { Block, BlockRaycastOptions, CommandResult, Effect, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, Player as IPlayer, ScreenDisplay, Vector, XYRotation } from "mojang-minecraft";
+import { Block, BlockRaycastOptions, CommandResult, Effect, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, Player as IPlayer, ScoreboardIdentity, ScreenDisplay, Vector, XYRotation } from "mojang-minecraft";
 import type { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "mojang-minecraft-ui";
 import { EntityInventory } from "../Inventory/index.js";
 import type { Item } from "../Item/index.js";
@@ -10,6 +10,34 @@ export declare class Entity {
      * The entity
      */
     protected entity: IEntity;
+    /**
+     * The dimension that the entity is in
+     */
+    readonly dimension: Dimension;
+    /**
+     * The location of the entity's head
+     */
+    readonly headLocation: Location;
+    /**
+     * The id of the entity
+     */
+    readonly id: string;
+    /**
+     * The rotation of the entity
+     */
+    readonly rotation: XYRotation;
+    /**
+     * The scoreboard identity of the entity
+     */
+    readonly scoreboard: ScoreboardIdentity;
+    /**
+     * The velocity of the entity
+     */
+    readonly velocity: Vector;
+    /**
+     * The view vector of the entity
+     */
+    readonly viewVector: Vector;
     constructor(entity: IEntity);
     /**
      * Add an effect to the entity
@@ -58,11 +86,6 @@ export declare class Entity {
      */
     getComponents(): IEntityComponent[];
     /**
-     * Get the dimension of the entity
-     * @returns {Dimension} The entity's dimension
-     */
-    getDimension(): Dimension;
-    /**
      * Get a dynamic property from the entity
      * @param {string} identifier The id of the property you want to get
      * @returns {boolean | number | string} The value of the property
@@ -81,45 +104,10 @@ export declare class Entity {
      */
     getEntitiesFromViewVector(options?: EntityRaycastOptions): Entity[];
     /**
-     * Get the entity's head location
-     * @returns {Location} The entity's head location
-     */
-    getHeadLocation(): Location;
-    /**
-     * Get the entity's health (if they have health)
-     * @returns {number} The entity's health
-     */
-    getHealth(): number;
-    /**
-     * Get the entity's id
-     * @returns {string} The entity's id
-     */
-    getId(): string;
-    /**
      * Get the IEntity
      * @returns {IEntity} The IEntity
      */
     getIEntity(): IEntity;
-    /**
-     * Get the entity's inventory (if they have one)
-     * @returns {EntityInventory} The entity's inventory
-     */
-    getInventory(): EntityInventory;
-    /**
-     * Get the entity's location
-     * @returns {Location} The entity's location
-     */
-    getLocation(): Location;
-    /**
-     * Get the entity's name tag
-     * @returns {string} The entity's nametag
-     */
-    getNameTag(): string;
-    /**
-     * Get the entity's rotation
-     * @returns {XYRotation} The entity's rotation
-     */
-    getRotation(): XYRotation;
     /**
      * Get the entity's score on a scoreboard
      * @param {string} objective Objective name to get the score from
@@ -133,21 +121,6 @@ export declare class Entity {
      */
     getTags(): string[];
     /**
-     * Get the entity's target
-     * @returns {Entity} The entity's target
-     */
-    getTarget(): Entity;
-    /**
-     * Get the entity's velocity
-     * @returns {Vector} The entity's velocity
-     */
-    getVelocity(): Vector;
-    /**
-     * Get the entity's view vector
-     * @returns {Vector} The entity's view vector
-     */
-    getViewVector(): Vector;
-    /**
      * Test whether or not the entity has a certain component
      * @param {string} component Component to test for
      * @returns {boolean} Whether or not the entity has the component
@@ -160,9 +133,29 @@ export declare class Entity {
      */
     hasTag(tag: string): boolean;
     /**
+     * The entity's health (if they have health)
+     */
+    get health(): number;
+    set health(health: number);
+    /**
+     * The entity's inventory (if they have one)
+     */
+    get inventory(): EntityInventory;
+    /**
+     * Whether or not the entity is sneaking (or doing sneaking movement)
+     */
+    get isSneaking(): boolean;
+    set isSneaking(value: boolean);
+    /**
      * Kill the entity
      */
     kill(): void;
+    get location(): Location;
+    /**
+     * The nametag of the entity
+     */
+    get nameTag(): string;
+    set nameTag(name: string);
     /**
      * Remove a dynamic property from the entity
      * @param {string} identifier Id of the property being removed
@@ -184,12 +177,9 @@ export declare class Entity {
     /**
      * Make the entity run a command
      * @param {string} command Command to run
-     * @returns {{ error: boolean, data?: any }} Command data + error
+     * @returns {any} Command data + error
      */
-    runCommand(command: string): {
-        error: boolean;
-        data?: any;
-    };
+    runCommand(command: string): any;
     /**
      * Make the entity run an async command
      * @param {string} command Command to run
@@ -202,16 +192,6 @@ export declare class Entity {
      * @param {boolean | number | string} value Value to set the property to
      */
     setDynamicProperty(identifier: string, value: boolean | number | string): void;
-    /**
-     * Set the entity's health (if they have health)
-     * @param {number}  health Amount to set the entity's health too
-     */
-    setHealth(health: number): void;
-    /**
-     * Set the entity's nametag
-     * @param {string} name The value to set the nametag to
-     */
-    setNameTag(name: string): void;
     /**
      * Set the main rotation of the entity
      * @param {number} degreesX Degrees on the X axis to set the rotation to
@@ -230,10 +210,10 @@ export declare class Entity {
      */
     setVelocity(velocity: Vector): void;
     /**
-     * Set the entity's target
-     * @param {Entity} entity The entity to be the new entity's target
+     * The target of the entity
      */
-    setTarget(entity: Entity): void;
+    get target(): Entity;
+    set target(entity: Entity);
     /**
      * Trigger an entity event
      * @param {string} event Event to trigger
@@ -242,79 +222,35 @@ export declare class Entity {
 }
 export declare class Player extends Entity {
     protected entity: IPlayer;
+    /**
+     * The player's name
+     */
+    readonly name: string;
+    /**
+     * The player's log
+     */
+    readonly log: PlayerLog;
+    /**
+     * The player's screen display
+     */
+    readonly onScreenDisplay: ScreenDisplay;
     constructor(player: IPlayer);
     /**
-     * Add xp points to the player
-     * @param {number} amount Amount of xp points to add to the player
+     * The gamemode of the player
      */
-    addXpPoints(amount: number): void;
-    /**
-     * Add xp levels to the player
-     * @param {number} amount Amount of xp levels to add to the player
-     */
-    addXpLevels(amount: number): void;
-    /**
-     * Get the player's gamemode
-     * @returns {Gamemode} The player's gamemode
-     */
-    getGamemode(): Gamemode;
-    /**
-     * Get the item the player is holding
-     * @returns {Item} The item the player is holding
-     */
-    getHeldItem(): Item;
+    get gamemode(): Gamemode;
+    set gamemode(gamemode: Gamemode);
     /**
      * Get an item cooldown from an item catagory
      * @param {string} itemCatagory Catagory of cooldown to test for
      * @returns {number} The length of that cooldown
      */
     getItemCooldown(itemCatagory: string): number;
-    getLog(): PlayerLog;
     /**
-     * Get the player's name
-     * @returns {string} The player's name
+     * The item the player is holding
      */
-    getName(): string;
-    /**
-     * Get the player's screen display
-     * @returns {ScreenDisplay} The player's screen display
-     */
-    getScreenDisplay(): ScreenDisplay;
-    /**
-     * Test for whether or not the player is dead
-     * @returns {boolean} Whether or not the player is dead
-     */
-    isDead(): boolean;
-    /**
-     * Test for whether or not the player is jumping
-     * @returns {boolean} Whether or not the player is jumping
-     */
-    isJumping(): boolean;
-    /**
-     * Test for whether or not the player is moving
-     * @returns {boolean} Whether or not the player is moving
-     */
-    isMoving(): boolean;
-    /**
-     * Test for whether or not the player is sleeping
-     * @returns {boolean} Whether or not the player is sleeping
-     */
-    isSleeping(): boolean;
-    /**
-     * Test for whether or not the player is sneaking
-     * @returns {boolean} Whether or not the player is sneaking
-     */
-    isSneaking(): boolean;
-    /**
-     * Test for whether or not the player is sprinting
-     * @returns {boolean} Whether or not the player is sprinting
-     */
-    isSprinting(): boolean;
-    /**
-     * Test for whether or not the player is on fire
-     * @returns {boolean} Whether or not the player is on fire
-     */
-    isOnFire(): boolean;
+    get heldItem(): Item;
+    set heldItem(item: Item);
     /**
      * Kick the player
      * @param {string} reason The reason they got kicked
@@ -325,16 +261,6 @@ export declare class Player extends Entity {
      * @param {string} msg The message to send to the player
      */
     message(msg: string): void;
-    /**
-     * Set the player's gamemode
-     * @param {Gamemode} gamemode The gamemode to set the player too
-     */
-    setGamemode(gamemode: Gamemode): void;
-    /**
-     * Set the item the player is holding
-     * @param {Item} item The item that the player will be holding
-     */
-    setHeldItem(item: Item): void;
     /**
      * Make the player run a command
      * @param {string} command Command to run (includes custom commands)
@@ -399,9 +325,8 @@ declare class PlayerLog {
      */
     forEach(callback: (value: any, key: any) => void, thisArg?: any): void;
     /**
-     * Get the size of the log
-     * @returns {number} The size of the log
+     * The size of the log
      */
-    getSize(): number;
+    get size(): number;
 }
 export {};

@@ -2,7 +2,7 @@ import { world } from "mojang-minecraft";
 import { Commands } from "../Commands/index.js";
 import { DatabaseUtils } from "../Database/index.js";
 import { Player } from "../Entity/index.js";
-import * as events from '../Events/index';
+import { events } from '../Events/index';
 import { broadcastMessage } from "../utils.js";
 import { World } from "../World/index";
 export class Client {
@@ -43,14 +43,19 @@ export class Client {
      */
     on(event, callback) {
         //@ts-ignore
-        events[event].on(callback);
+        return new events[event]().on(callback);
     }
     /**
      * Remove a listener for an event
      * @param {eventName} event Event to remove a listener from
      */
     off(event) {
-        events[event].off();
+        try {
+            event.off();
+        }
+        catch {
+            this.world.broadcast(`§cYou can only input events in the client.off method`);
+        }
     }
     /**
      * Listen to an event once
@@ -58,10 +63,10 @@ export class Client {
      * @param {(data: Events[eventName]) => void} callback Code to run when the event is called for
      */
     once(event, callback) {
-        events[event].on((data) => {
+        const arg = new events[event]().on((data) => {
             //@ts-ignore
             callback(data);
-            events[event].off();
+            arg.off();
         });
     }
     /**
@@ -76,8 +81,5 @@ export class Client {
         catch {
             return { error: true, data: undefined };
         }
-    }
-    broadcast(message) {
-        this.runCommand(`tellraw @a {"rawtext":[{"text":${JSON.stringify(message)}}]}`);
     }
 }

@@ -2,10 +2,6 @@ import { Enchantment, ItemStack, MinecraftEnchantmentTypes } from "mojang-minecr
 import { ItemComponents } from "../Types/index";
 export declare class Item {
     /**
-     * The item id
-     */
-    readonly id: string;
-    /**
      * The item stack
      */
     protected readonly itemStack: ItemStack;
@@ -24,21 +20,16 @@ export declare class Item {
         level?: number;
     }): boolean;
     /**
-     * The amount of the item
-     */
-    get amount(): number;
-    set amount(amount: number);
-    /**
-     * The data value of the item
-     */
-    get data(): number;
-    set data(data: number);
-    /**
      * Test if two items are equal
      * @param {Item} item Item to test with
      * @returns {boolean} Whether or not they are equal
      */
     equals(item: Item): boolean;
+    /**
+     * Get the amount of the item
+     * @returns {number} The amount of the item
+     */
+    getAmount(): number;
     /**
      * Get an item component
      * @param {keyof ItemComponents} component Component to get
@@ -51,6 +42,11 @@ export declare class Item {
      */
     getComponents(): any[];
     /**
+     * Get the data value of the item
+     * @returns {number} The data value of the item
+     */
+    getData(): number;
+    /**
      * Get an enchant from the item
      * @param {keyof typeof MinecraftEnchantmentTypes} enchant Enchant to get from the item
      * @returns {Enchantment} The enchant
@@ -62,15 +58,25 @@ export declare class Item {
      */
     getEnchants(): Enchantment[];
     /**
+     * Get the item's id
+     * @returns {string} The item's id
+     */
+    getId(): string;
+    /**
      * Get the item stack
      * @returns {ItemStack} The item stack
      */
     getItemStack(): ItemStack;
     /**
-     * The item's lore
+     * Get the item's lore
+     * @returns {string[]} The item's lore
      */
-    get lore(): string[];
-    set lore(lore: string[]);
+    getLore(): string[];
+    /**
+     * Get the name of the item
+     * @returns {string} The name of the item
+     */
+    getName(): string;
     /**
      * Test whether or not the item has a component
      * @param {string} component Component to test for
@@ -78,15 +84,30 @@ export declare class Item {
      */
     hasComponent(component: string): boolean;
     /**
-     * The name of the item
-     */
-    get name(): string;
-    set name(name: string);
-    /**
      * Remove an enchant from the item
      * @param {keyof typeof MinecraftEnchantmentTypes} enchant Enchant to remove from the item
      */
     removeEnchant(enchant: keyof typeof MinecraftEnchantmentTypes): void;
+    /**
+     * Set the item's amount
+     * @param {number} amount The item's new amount
+     */
+    setAmount(amount: number): void;
+    /**
+     * Set the item's data value
+     * @param {number} data The item's new data value
+     */
+    setData(data: number): void;
+    /**
+     * Set the item's lore
+     * @param {number} lore The item's new lore
+     */
+    setLore(lore: string[]): void;
+    /**
+     * Set the item's name
+     * @param {number} name The item's new name
+     */
+    setName(name: string): void;
     /**
      * Trigger an item event
      * @param {string} event Event to trigger

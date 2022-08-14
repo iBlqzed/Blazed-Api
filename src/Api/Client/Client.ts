@@ -2,7 +2,7 @@ import { world } from "mojang-minecraft";
 import { Commands } from "../Commands/index.js";
 import { DatabaseUtils } from "../Database/index.js";
 import { Player } from "../Entity/index.js";
-import * as events from '../Events/index'
+import { events } from '../Events/index'
 import { Events, ClientOptions } from "../Types/index.js";
 import { broadcastMessage } from "../utils.js";
 import { World } from "../World/index";
@@ -44,16 +44,20 @@ export class Client {
      * @param {string} event Event to listen to
      * @param {(data: Events[eventName]) => void} callback Code to run when the event is called for
      */
-    on<eventName extends keyof Events>(event: eventName, callback: (data: Events[eventName]) => void) {
+    on<eventName extends keyof Events>(event: eventName, callback: (data: Events[eventName]) => void): any {
         //@ts-ignore
-        events[event].on(callback)
+        return new events[event]().on(callback)
     }
     /**
      * Remove a listener for an event
      * @param {eventName} event Event to remove a listener from
      */
-    off<eventName extends keyof Events>(event: eventName) {
-        events[event].off()
+    off(event: any): void {
+        try {
+            event.off()
+        } catch {
+            this.world.broadcast(`§cYou can only input events in the client.off method`)
+        }
     }
     /**
      * Listen to an event once
@@ -61,10 +65,10 @@ export class Client {
      * @param {(data: Events[eventName]) => void} callback Code to run when the event is called for
      */
     once<eventName extends keyof Events>(event: eventName, callback: (data: Events[eventName]) => void) {
-        events[event].on((data) => {
+        const arg = new events[event]().on((data) => {
             //@ts-ignore
             callback(data)
-            events[event].off()
+            arg.off()
         })
     }
     /**
@@ -78,8 +82,5 @@ export class Client {
         } catch {
             return { error: true, data: undefined }
         }
-    }
-    broadcast(message: string): void {
-        this.runCommand(`tellraw @a {"rawtext":[{"text":${JSON.stringify(message)}}]}`)
     }
 }

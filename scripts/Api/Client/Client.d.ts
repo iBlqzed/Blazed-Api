@@ -25,12 +25,12 @@ export declare class Client {
      * @param {string} event Event to listen to
      * @param {(data: Events[eventName]) => void} callback Code to run when the event is called for
      */
-    on<eventName extends keyof Events>(event: eventName, callback: (data: Events[eventName]) => void): void;
+    on<eventName extends keyof Events>(event: eventName, callback: (data: Events[eventName]) => void): any;
     /**
      * Remove a listener for an event
      * @param {eventName} event Event to remove a listener from
      */
-    off<eventName extends keyof Events>(event: eventName): void;
+    off(event: any): void;
     /**
      * Listen to an event once
      * @param {eventName} event Event to listen for (once)
@@ -46,5 +46,4 @@ export declare class Client {
         error: boolean;
         data: any;
     };
-    broadcast(message: string): void;
 }

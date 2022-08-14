@@ -1,38 +1,34 @@
 import { world } from "mojang-minecraft";
 import { Player } from "../Entity/index.js";
 import { setTickTimeout } from "../utils.js";
-let arg;
 export class BlockBreak {
+    constructor() {
+        /**
+         * The actual arg
+         */
+        this.arg = undefined;
+    }
     /**
      * Add a listener for the event
      */
-    static on(callback) {
-        if (this.registered)
-            return;
-        this.registered = true;
-        arg = world.events.blockBreak.subscribe(({ player, block, brokenBlockPermutation }) => {
+    on(callback) {
+        this.arg = world.events.blockBreak.subscribe(({ player, block, brokenBlockPermutation }) => {
             callback({
                 player: new Player(player),
-                block: block,
-                brokenBlockPermutation: brokenBlockPermutation,
+                block,
+                brokenBlockPermutation,
                 cancel() {
                     player.dimension.getBlock(block.location).setPermutation(brokenBlockPermutation);
                     setTickTimeout(() => player.dimension.getEntitiesAtBlockLocation(block.location).filter(entity => entity.id === 'minecraft:item').forEach(item => item.kill()), 0);
                 }
             });
         });
+        return this;
     }
     /**
      * Remove the listener for the event
      */
-    static off() {
-        if (!this.registered)
-            return;
-        world.events.blockBreak.unsubscribe(arg);
-        this.registered = false;
+    off() {
+        world.events.blockBreak.unsubscribe(this.arg);
     }
 }
-/**
- * Whether or not the event has been registered
- */
-BlockBreak.registered = false;

@@ -1,13 +1,27 @@
-export * from './BlockBreak'
-export * from './BlockHit'
-export * from './BlockPlace'
-export * from './Chat.js'
-export * from './EntityEvent'
-export * from './EntityHit'
-export * from './ItemUse'
-export * from './ItemUseOn'
-export * from './PlayerDeath'
-export * from './PlayerJoin'
-export * from './PlayerLeave'
-export * from './Tick'
-export * from './WorldLoad'
+import { BlockBreak } from './BlockBreak'
+import { BlockHit } from './BlockHit'
+import { BlockPlace } from './BlockPlace'
+import { Chat } from './Chat'
+import { EntityEvent } from './EntityEvent'
+import { EntityHit } from './EntityHit'
+import { ItemUse } from './ItemUse'
+import { ItemUseOn } from './ItemUseOn'
+import { PlayerJoin } from './PlayerJoin'
+import { PlayerLeave } from './PlayerLeave'
+import { Tick } from './Tick'
+import { WorldLoad } from './WorldLoad'
+
+export const events = {
+    BlockBreak,
+    BlockHit,
+    BlockPlace,
+    Chat,
+    EntityEvent,
+    EntityHit,
+    ItemUse,
+    ItemUseOn,
+    PlayerJoin,
+    PlayerLeave,
+    Tick,
+    WorldLoad
+}

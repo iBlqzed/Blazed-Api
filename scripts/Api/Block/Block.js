@@ -15,7 +15,7 @@ export class Block {
         return this.block.getComponent(comp);
     }
     /**
-     *
+     * Get all the block's tags
      * @returns {string[]} All the block's tags
      */
     getTags() {

@@ -3,20 +3,16 @@ import { Player, Entity } from "../Entity/index.js"
 import { Item } from "../Item/index.js"
 import { Events } from "../Types/index.js"
 
-let arg: any
-
 export class ItemUse {
     /**
-     * Whether or not the event has been registered
+     * The actual arg
      */
-    static registered = false
+    protected arg: any = undefined
     /**
      * Add a listener for the event
      */
-    static on(callback: (data: Events['ItemUse']) => void): void {
-        if (this.registered) return
-        this.registered = true
-        arg = world.events.beforeItemUse.subscribe(data => {
+    on(callback: (data: Events['ItemUse']) => void): ItemUse {
+        this.arg = world.events.beforeItemUse.subscribe(data => {
             callback({
                 entity: data.source.id === 'minecraft:player' ? new Player(data.source as IPlayer) : new Entity(data.source),
                 item: new Item(data.item),
@@ -25,13 +21,12 @@ export class ItemUse {
                 }
             })
         })
+        return this
     }
     /**
      * Remove the listener for the event
      */
-    static off(): void {
-        if (!this.registered) return
-        world.events.beforeItemUse.unsubscribe(arg)
-        this.registered = false
+    off(): void {
+        world.events.beforeItemUse.unsubscribe(this.arg)
     }
 }

@@ -1,29 +1,24 @@
 import { world } from "mojang-minecraft"
 import { Events } from "../Types/index.js"
 
-let arg: any
-
 export class Tick {
     /**
-     * Whether or not the event has been registered
+     * The actual arg
      */
-    static registered = false
+    protected arg: any = undefined
     /**
      * Add a listener for the event
      */
-    static on(callback: (data: Events['Tick']) => void): void {
-        if (this.registered) return
-        this.registered = true
-        arg = world.events.tick.subscribe(data => {
+    on(callback: (data: Events['Tick']) => void): Tick {
+        this.arg = world.events.tick.subscribe(data => {
             callback()
         })
+        return this
     }
     /**
      * Remove the listener for the event
      */
-    static off(): void {
-        if (!this.registered) return
-        world.events.tick.unsubscribe(arg)
-        this.registered = false
+    off(): void {
+        world.events.tick.unsubscribe(this.arg)
     }
 }

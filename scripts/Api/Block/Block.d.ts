@@ -30,7 +30,7 @@ export declare class Block {
      */
     getComponent(comp: string): any;
     /**
-     *
+     * Get all the block's tags
      * @returns {string[]} All the block's tags
      */
     getTags(): string[];

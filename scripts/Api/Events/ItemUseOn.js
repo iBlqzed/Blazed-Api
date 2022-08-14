@@ -1,17 +1,19 @@
 import { world } from "mojang-minecraft";
 import { Player, Entity } from "../Entity/index.js";
 import { Item } from "../Item/index.js";
-let arg;
 export class ItemUseOn {
+    constructor() {
+        /**
+         * The actual arg
+         */
+        this.arg = undefined;
+    }
     /**
      * Add a listener for the event
      */
-    static on(callback) {
-        if (this.registered)
-            return;
-        this.registered = true;
+    on(callback) {
         const log = {};
-        arg = world.events.beforeItemUseOn.subscribe(data => {
+        this.arg = world.events.beforeItemUseOn.subscribe(data => {
             if (data.source.id === "minecraft:player") {
                 const oldLog = log[data.source.name] ?? Date.now() - 102;
                 log[data.source.name] = Date.now();
@@ -35,18 +37,12 @@ export class ItemUseOn {
                     }
                 });
         });
+        return this;
     }
     /**
      * Remove the listener for the event
      */
-    static off() {
-        if (!this.registered)
-            return;
-        world.events.beforeItemUseOn.unsubscribe(arg);
-        this.registered = false;
+    off() {
+        world.events.beforeItemUseOn.unsubscribe(this.arg);
     }
 }
-/**
- * Whether or not the event has been registered
- */
-ItemUseOn.registered = false;

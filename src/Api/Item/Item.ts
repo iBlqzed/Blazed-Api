@@ -3,10 +3,6 @@ import { ItemComponents } from "../Types/index";
 
 export class Item {
     /**
-     * The item id
-     */
-    readonly id: string
-    /**
      * The item stack
      */
     protected readonly itemStack: ItemStack
@@ -15,9 +11,7 @@ export class Item {
      * @param {ItemStack | string} item Item stack or id of the item
      */
     constructor(item: ItemStack | string) {
-        const _item = item instanceof ItemStack ? item : new ItemStack(Items.get(item))
-        this.itemStack = _item
-        this.id = _item?.id
+        this.itemStack = item instanceof ItemStack ? item : new ItemStack(Items.get(item))
     }
     /**
      * Add an enchant to the item
@@ -33,42 +27,25 @@ export class Item {
         return rV
     }
     /**
-     * The amount of the item
-     */
-    get amount(): number {
-        return this.itemStack?.amount
-    }
-    set amount(amount: number) {
-        this.itemStack && (this.itemStack.amount = amount)
-    }
-    /**
-     * The data value of the item
-     */
-    get data(): number {
-        return this.itemStack?.data
-    }
-    set data(data: number) {
-        this.itemStack && (this.itemStack.data = data)
-    }
-    /**
      * Test if two items are equal
      * @param {Item} item Item to test with
      * @returns {boolean} Whether or not they are equal
      */
     equals(item: Item): boolean {
-        if (this.id !== item.id) return false
-        if (this.name !== item.name) return false
-        if (this.amount !== item.amount) return false
-        if (this.data !== item.data) return false
-        if (JSON.stringify(this.lore) !== JSON.stringify(item.lore)) return false
-        if (this.getEnchants()?.filter(ench => {
-            //@ts-ignore
-            const otherEnch = item.getEnchant(ench.type.id)
-            if (!otherEnch) return false
-            if (otherEnch.level === ench.level) return true
-            return false
-        }).length !== this.getEnchants().length) return false
+        if (this.getId() !== item.getId()) return false
+        if (this.getName() !== item.getName()) return false
+        if (this.getAmount() !== item.getAmount()) return false
+        if (this.getData() !== item.getData()) return false
+        if (JSON.stringify(this.getLore()) !== JSON.stringify(item.getLore())) return false
+        if (JSON.stringify(this.getEnchants()) !== JSON.stringify(this.getEnchants())) return false
         return true
+    }
+    /**
+     * Get the amount of the item
+     * @returns {number} The amount of the item
+     */
+    getAmount(): number {
+        return this.itemStack?.amount
     }
     /**
      * Get an item component
@@ -87,6 +64,13 @@ export class Item {
         return this.itemStack?.getComponents()
     }
     /**
+     * Get the data value of the item
+     * @returns {number} The data value of the item
+     */
+    getData(): number {
+        return this.itemStack?.data
+    }
+    /**
      * Get an enchant from the item
      * @param {keyof typeof MinecraftEnchantmentTypes} enchant Enchant to get from the item
      * @returns {Enchantment} The enchant
@@ -101,13 +85,19 @@ export class Item {
      */
     getEnchants(): Enchantment[] {
         const eL = [] as Enchantment[]
-        for (const _ench in MinecraftEnchantmentTypes) {
-            //@ts-ignore
+        for (const _ench of Object.keys(MinecraftEnchantmentTypes) as (keyof MinecraftEnchantmentTypes)[]) {
             const ench = this.getEnchant(_ench)
             if (!ench) continue
             eL.push(ench)
         }
         return eL
+    }
+    /**
+     * Get the item's id
+     * @returns {string} The item's id
+     */
+    getId(): string {
+        return this.itemStack.id
     }
     /**
      * Get the item stack
@@ -117,13 +107,18 @@ export class Item {
         return this.itemStack
     }
     /**
-     * The item's lore
+     * Get the item's lore
+     * @returns {string[]} The item's lore
      */
-    get lore(): string[] {
+    getLore(): string[] {
         return this.itemStack?.getLore()
     }
-    set lore(lore: string[]) {
-        this.itemStack?.setLore(lore)
+    /**
+     * Get the name of the item
+     * @returns {string} The name of the item
+     */
+    getName(): string {
+        return this.itemStack?.nameTag
     }
     /**
      * Test whether or not the item has a component
@@ -132,15 +127,6 @@ export class Item {
      */
     hasComponent(component: string): boolean {
         return this.itemStack?.hasComponent(component)
-    }
-    /**
-     * The name of the item
-     */
-    get name(): string {
-        return this.itemStack?.nameTag
-    }
-    set name(name: string) {
-        this.itemStack && (this.itemStack.nameTag = name)
     }
     /**
      * Remove an enchant from the item
@@ -152,6 +138,34 @@ export class Item {
         // @ts-ignore
         eL.removeEnchantment(MinecraftEnchantmentTypes[enchant])
         eC.enchantments = eL
+    }
+    /**
+     * Set the item's amount
+     * @param {number} amount The item's new amount
+     */
+    setAmount(amount: number): void {
+        this.itemStack && (this.itemStack.amount = amount)
+    }
+    /**
+     * Set the item's data value
+     * @param {number} data The item's new data value
+     */
+    setData(data: number): void {
+        this.itemStack && (this.itemStack.data = data)
+    }
+    /**
+     * Set the item's lore
+     * @param {number} lore The item's new lore
+     */
+    setLore(lore: string[]): void {
+        this.itemStack && this.itemStack.setLore(lore)
+    }
+    /**
+     * Set the item's name
+     * @param {number} name The item's new name
+     */
+    setName(name: string): void {
+        this.itemStack && (this.itemStack.nameTag = name)
     }
     /**
      * Trigger an item event

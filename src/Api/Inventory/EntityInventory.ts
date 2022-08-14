@@ -45,7 +45,7 @@ export class EntityInventory {
      */
     addItem(item: Item): void {
         if (this.emptySlotCount !== 0) this._inventory.container.addItem(item.getItemStack())
-        else this._entity.dimension.spawnItem(item, this._entity.location)
+        else this._entity.getDimension().spawnItem(item, this._entity.getLocation())
     }
     /**
      * Amount of empty slots in the entity's inventory

@@ -1,15 +1,15 @@
 import { Events } from "../Types/index";
 export declare class WorldLoad {
     /**
-     * Whether or not the event has been registered
+     * The actual arg
      */
-    static registered: boolean;
+    protected arg: any;
     /**
      * Add a listener for the event
      */
-    static on(callback: (data: Events['WorldLoad']) => void): void;
+    on(callback: (data: Events['WorldLoad']) => void): WorldLoad;
     /**
      * Remove the listener for the event
      */
-    static off(): void;
+    off(): void;
 }

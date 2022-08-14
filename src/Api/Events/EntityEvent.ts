@@ -2,20 +2,16 @@ import { world } from "mojang-minecraft"
 import { Entity } from "../Entity/index.js"
 import { Events } from "../Types/index.js"
 
-let arg: any
-
 export class EntityEvent {
     /**
-     * Whether or not the event has been registered
+     * The actual arg
      */
-    static registered = false
+    protected arg: any = undefined
     /**
      * Add a listener for the event
      */
-    static on(callback: (data: Events['EntityEvent']) => void): void {
-        if (this.registered) return
-        this.registered = true
-        arg = world.events.beforeDataDrivenEntityTriggerEvent.subscribe(data => {
+    on(callback: (data: Events['EntityEvent']) => void): EntityEvent {
+        this.arg = world.events.beforeDataDrivenEntityTriggerEvent.subscribe(data => {
             callback({
                 entity: new Entity(data.entity),
                 modifiers: data.modifiers,
@@ -25,13 +21,12 @@ export class EntityEvent {
                 }
             })
         })
+        return this
     }
     /**
      * Remove the listener for the event
      */
-    static off(): void {
-        if (!this.registered) return
-        world.events.beforeDataDrivenEntityTriggerEvent.unsubscribe(arg)
-        this.registered = false
+    off(): void {
+        world.events.beforeDataDrivenEntityTriggerEvent.unsubscribe(this.arg)
     }
 }

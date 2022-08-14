@@ -1,15 +1,17 @@
 import { world } from "mojang-minecraft";
 import { Player } from "../Entity/index";
-let arg;
 export class Chat {
+    constructor() {
+        /**
+         * The actual arg
+         */
+        this.arg = undefined;
+    }
     /**
      * Add a listener for the event
      */
-    static on(callback) {
-        if (this.registered)
-            return;
-        this.registered = true;
-        arg = world.events.beforeChat.subscribe(data => {
+    on(callback) {
+        this.arg = world.events.beforeChat.subscribe(data => {
             callback({
                 player: new Player(data.sender),
                 message: data.message,
@@ -18,18 +20,12 @@ export class Chat {
                 }
             });
         });
+        return this;
     }
     /**
      * Remove the listener for the event
      */
-    static off() {
-        if (!this.registered)
-            return;
-        world.events.beforeChat.unsubscribe(arg);
-        this.registered = false;
+    off() {
+        world.events.beforeChat.unsubscribe(this.arg);
     }
 }
-/**
- * Whether or not the event has been registered
- */
-Chat.registered = false;

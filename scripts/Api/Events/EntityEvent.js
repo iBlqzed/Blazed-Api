@@ -1,15 +1,17 @@
 import { world } from "mojang-minecraft";
 import { Entity } from "../Entity/index.js";
-let arg;
 export class EntityEvent {
+    constructor() {
+        /**
+         * The actual arg
+         */
+        this.arg = undefined;
+    }
     /**
      * Add a listener for the event
      */
-    static on(callback) {
-        if (this.registered)
-            return;
-        this.registered = true;
-        arg = world.events.beforeDataDrivenEntityTriggerEvent.subscribe(data => {
+    on(callback) {
+        this.arg = world.events.beforeDataDrivenEntityTriggerEvent.subscribe(data => {
             callback({
                 entity: new Entity(data.entity),
                 modifiers: data.modifiers,
@@ -19,18 +21,12 @@ export class EntityEvent {
                 }
             });
         });
+        return this;
     }
     /**
      * Remove the listener for the event
      */
-    static off() {
-        if (!this.registered)
-            return;
-        world.events.beforeDataDrivenEntityTriggerEvent.unsubscribe(arg);
-        this.registered = false;
+    off() {
+        world.events.beforeDataDrivenEntityTriggerEvent.unsubscribe(this.arg);
     }
 }
-/**
- * Whether or not the event has been registered
- */
-EntityEvent.registered = false;

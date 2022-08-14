@@ -1,15 +1,15 @@
 import { Events } from "../Types/index.js";
 export declare class BlockBreak {
     /**
-     * Whether or not the event has been registered
+     * The actual arg
      */
-    static registered: boolean;
+    protected arg: any;
     /**
      * Add a listener for the event
      */
-    static on(callback: (data: Events['BlockBreak']) => void): void;
+    on(callback: (data: Events['BlockBreak']) => void): BlockBreak;
     /**
      * Remove the listener for the event
      */
-    static off(): void;
+    off(): void;
 }

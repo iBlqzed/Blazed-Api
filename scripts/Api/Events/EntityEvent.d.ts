@@ -1,15 +1,15 @@
 import { Events } from "../Types/index.js";
 export declare class EntityEvent {
     /**
-     * Whether or not the event has been registered
+     * The actual arg
      */
-    static registered: boolean;
+    protected arg: any;
     /**
      * Add a listener for the event
      */
-    static on(callback: (data: Events['EntityEvent']) => void): void;
+    on(callback: (data: Events['EntityEvent']) => void): EntityEvent;
     /**
      * Remove the listener for the event
      */
-    static off(): void;
+    off(): void;
 }

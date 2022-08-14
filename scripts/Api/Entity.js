@@ -13,7 +13,7 @@ setTickTimeout(() => {
 }, 0);
 world.events.playerLeave.subscribe(({ playerName }) => {
     playerLog.delete(playerName);
-    allPlayers.splice(allPlayers.findIndex(plr => plr.getName() === playerName), 1);
+    allPlayers.splice(allPlayers.findIndex(plr => plr.name === playerName), 1);
 });
 world.events.playerJoin.subscribe(({ player }) => {
     playerLog.set(player.name, new Map());
@@ -22,6 +22,13 @@ world.events.playerJoin.subscribe(({ player }) => {
 export class Entity {
     constructor(entity) {
         this.entity = entity;
+        this.dimension = new Dimension(entity.dimension);
+        this.headLocation = entity.headLocation;
+        this.id = entity.id;
+        this.rotation = entity.rotation;
+        this.scoreboard = entity.scoreboard;
+        this.velocity = entity.velocity;
+        this.viewVector = entity.viewVector;
     }
     /**
      * Add an effect to the entity
@@ -88,13 +95,6 @@ export class Entity {
         return this.entity.getComponents();
     }
     /**
-     * Get the dimension of the entity
-     * @returns {Dimension} The entity's dimension
-     */
-    getDimension() {
-        return new Dimension(this.entity.dimension);
-    }
-    /**
      * Get a dynamic property from the entity
      * @param {string} identifier The id of the property you want to get
      * @returns {boolean | number | string} The value of the property
@@ -119,60 +119,11 @@ export class Entity {
         return this.entity.getEntitiesFromViewVector(options).map(entity => new Entity(entity));
     }
     /**
-     * Get the entity's head location
-     * @returns {Location} The entity's head location
-     */
-    getHeadLocation() {
-        return this.entity.headLocation;
-    }
-    /**
-     * Get the entity's health (if they have health)
-     * @returns {number} The entity's health
-     */
-    getHealth() {
-        return this.getComponent('health')?.current;
-    }
-    /**
-     * Get the entity's id
-     * @returns {string} The entity's id
-     */
-    getId() {
-        return this.entity.id;
-    }
-    /**
      * Get the IEntity
      * @returns {IEntity} The IEntity
      */
     getIEntity() {
         return this.entity;
-    }
-    /**
-     * Get the entity's inventory (if they have one)
-     * @returns {EntityInventory} The entity's inventory
-     */
-    getInventory() {
-        return this.hasComponent('inventory') ? new EntityInventory(this) : undefined;
-    }
-    /**
-     * Get the entity's location
-     * @returns {Location} The entity's location
-     */
-    getLocation() {
-        return this.entity.location;
-    }
-    /**
-     * Get the entity's name tag
-     * @returns {string} The entity's nametag
-     */
-    getNameTag() {
-        return this.entity.nameTag;
-    }
-    /**
-     * Get the entity's rotation
-     * @returns {XYRotation} The entity's rotation
-     */
-    getRotation() {
-        return this.entity.rotation;
     }
     /**
      * Get the entity's score on a scoreboard
@@ -197,27 +148,6 @@ export class Entity {
         return this.entity.getTags();
     }
     /**
-     * Get the entity's target
-     * @returns {Entity} The entity's target
-     */
-    getTarget() {
-        return new Entity(this.entity.target);
-    }
-    /**
-     * Get the entity's velocity
-     * @returns {Vector} The entity's velocity
-     */
-    getVelocity() {
-        return this.entity.velocity;
-    }
-    /**
-     * Get the entity's view vector
-     * @returns {Vector} The entity's view vector
-     */
-    getViewVector() {
-        return this.entity.viewVector;
-    }
-    /**
      * Test whether or not the entity has a certain component
      * @param {string} component Component to test for
      * @returns {boolean} Whether or not the entity has the component
@@ -234,10 +164,46 @@ export class Entity {
         return this.entity.hasTag(tag);
     }
     /**
+     * The entity's health (if they have health)
+     */
+    get health() {
+        return this.getComponent('health')?.current;
+    }
+    set health(health) {
+        this.getComponent('health')?.setCurrent(health);
+    }
+    /**
+     * The entity's inventory (if they have one)
+     */
+    get inventory() {
+        return this.hasComponent('inventory') ? new EntityInventory(this) : undefined;
+    }
+    /**
+     * Whether or not the entity is sneaking (or doing sneaking movement)
+     */
+    get isSneaking() {
+        return this.entity.isSneaking;
+    }
+    set isSneaking(value) {
+        this.entity.isSneaking = value;
+    }
+    /**
      * Kill the entity
      */
     kill() {
         this.entity.kill();
+    }
+    get location() {
+        return this.entity.location;
+    }
+    /**
+     * The nametag of the entity
+     */
+    get nameTag() {
+        return this.entity.nameTag;
+    }
+    set nameTag(name) {
+        this.entity.nameTag = name;
     }
     /**
      * Remove a dynamic property from the entity
@@ -266,11 +232,11 @@ export class Entity {
     /**
      * Make the entity run a command
      * @param {string} command Command to run
-     * @returns {{ error: boolean, data?: any }} Command data + error
+     * @returns {any} Command data + error
      */
     runCommand(command) {
         try {
-            return { error: false, data: this.entity.runCommand(command) };
+            return { error: false, ...this.entity.runCommand(command) };
         }
         catch {
             return { error: true };
@@ -291,20 +257,7 @@ export class Entity {
      */
     setDynamicProperty(identifier, value) {
         this.entity.setDynamicProperty(identifier, value);
-    }
-    /**
-     * Set the entity's health (if they have health)
-     * @param {number}  health Amount to set the entity's health too
-     */
-    setHealth(health) {
-        this.getComponent('health')?.setCurrent(health);
-    }
-    /**
-     * Set the entity's nametag
-     * @param {string} name The value to set the nametag to
-     */
-    setNameTag(name) {
-        this.entity.nameTag = name;
+        this.entity.setVelocity;
     }
     /**
      * Set the main rotation of the entity
@@ -330,10 +283,12 @@ export class Entity {
         this.entity.setVelocity(velocity);
     }
     /**
-     * Set the entity's target
-     * @param {Entity} entity The entity to be the new entity's target
+     * The target of the entity
      */
-    setTarget(entity) {
+    get target() {
+        return new Entity(this.entity.target);
+    }
+    set target(entity) {
         this.entity.target = entity.entity;
     }
     /**
@@ -347,30 +302,14 @@ export class Entity {
 export class Player extends Entity {
     constructor(player) {
         super(player);
+        this.name = player.name;
+        this.onScreenDisplay = player.onScreenDisplay;
+        this.log = new PlayerLog(player.name);
     }
     /**
-     * Add xp points to the player
-     * @param {number} amount Amount of xp points to add to the player
+     * The gamemode of the player
      */
-    addXpPoints(amount) {
-        if (!Number.isSafeInteger(amount))
-            return;
-        this.runCommand(`/xp ${amount} @s`);
-    }
-    /**
-     * Add xp levels to the player
-     * @param {number} amount Amount of xp levels to add to the player
-     */
-    addXpLevels(amount) {
-        if (!Number.isSafeInteger(amount))
-            return;
-        this.runCommand(`/xp ${amount}L @s`);
-    }
-    /**
-     * Get the player's gamemode
-     * @returns {Gamemode} The player's gamemode
-     */
-    getGamemode() {
+    get gamemode() {
         const survivalTest = this.runCommand(`testfor @s[m=0]`).error;
         if (!survivalTest)
             return 'survival';
@@ -382,12 +321,9 @@ export class Player extends Entity {
             return 'adventure';
         return 'unknown';
     }
-    /**
-     * Get the item the player is holding
-     * @returns {Item} The item the player is holding
-     */
-    getHeldItem() {
-        return this.getInventory().getItem(this.entity.selectedSlot);
+    set gamemode(gamemode) {
+        if (gamemode !== 'unknown')
+            this.runCommand(`gamemode ${gamemode} @s`);
     }
     /**
      * Get an item cooldown from an item catagory
@@ -397,71 +333,14 @@ export class Player extends Entity {
     getItemCooldown(itemCatagory) {
         return this.entity.getItemCooldown(itemCatagory);
     }
-    getLog() {
-        return new PlayerLog(this.entity.name);
-    }
     /**
-     * Get the player's name
-     * @returns {string} The player's name
+     * The item the player is holding
      */
-    getName() {
-        return this.entity.name;
+    get heldItem() {
+        return this.inventory.getItem(this.entity.selectedSlot);
     }
-    /**
-     * Get the player's screen display
-     * @returns {ScreenDisplay} The player's screen display
-     */
-    getScreenDisplay() {
-        return this.entity.onScreenDisplay;
-    }
-    /**
-     * Test for whether or not the player is dead
-     * @returns {boolean} Whether or not the player is dead
-     */
-    isDead() {
-        return this.hasTag(`is_dead`);
-    }
-    /**
-     * Test for whether or not the player is jumping
-     * @returns {boolean} Whether or not the player is jumping
-     */
-    isJumping() {
-        return this.hasTag(`is_jumping`);
-    }
-    /**
-     * Test for whether or not the player is moving
-     * @returns {boolean} Whether or not the player is moving
-     */
-    isMoving() {
-        return this.hasTag(`is_moving`);
-    }
-    /**
-     * Test for whether or not the player is sleeping
-     * @returns {boolean} Whether or not the player is sleeping
-     */
-    isSleeping() {
-        return this.hasTag('is_sleeping');
-    }
-    /**
-     * Test for whether or not the player is sneaking
-     * @returns {boolean} Whether or not the player is sneaking
-     */
-    isSneaking() {
-        return this.hasTag('is_sneaking');
-    }
-    /**
-     * Test for whether or not the player is sprinting
-     * @returns {boolean} Whether or not the player is sprinting
-     */
-    isSprinting() {
-        return this.hasTag('is_sprinting');
-    }
-    /**
-     * Test for whether or not the player is on fire
-     * @returns {boolean} Whether or not the player is on fire
-     */
-    isOnFire() {
-        return this.hasTag('is_on_fire');
+    set heldItem(item) {
+        this.inventory.setItem(this.entity.selectedSlot, item);
     }
     /**
      * Kick the player
@@ -476,21 +355,6 @@ export class Player extends Entity {
      */
     message(msg) {
         this.runCommand(`tellraw @s {"rawtext":[{"text":${JSON.stringify(msg)}}]}`);
-    }
-    /**
-     * Set the player's gamemode
-     * @param {Gamemode} gamemode The gamemode to set the player too
-     */
-    setGamemode(gamemode) {
-        if (gamemode !== 'unknown')
-            this.runCommand(`gamemode ${gamemode} @s`);
-    }
-    /**
-     * Set the item the player is holding
-     * @param {Item} item The item that the player will be holding
-     */
-    setHeldItem(item) {
-        this.getInventory().setItem(this.entity.selectedSlot, item);
     }
     /**
      * Make the player run a command
@@ -596,10 +460,9 @@ class PlayerLog {
         playerLog.get(this.name).forEach(callback, thisArg);
     }
     /**
-     * Get the size of the log
-     * @returns {number} The size of the log
+     * The size of the log
      */
-    getSize() {
+    get size() {
         return this._size;
     }
 }
