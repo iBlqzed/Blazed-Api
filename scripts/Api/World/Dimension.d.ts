@@ -1,4 +1,5 @@
-import { Block, BlockLocation, BlockRaycastOptions, CommandResult, Dimension as IDimension, EntityQueryOptions, EntityRaycastOptions, ExplosionOptions, Location, Vector } from "mojang-minecraft";
+import { BlockLocation, BlockRaycastOptions, CommandResult, Dimension as IDimension, EntityQueryOptions, EntityRaycastOptions, ExplosionOptions, Location, Vector } from "mojang-minecraft";
+import { Block } from "../Block/index.js";
 import { Entity } from "../Entity/index";
 import { Item } from "../Item/index";
 export declare class Dimension {
@@ -52,7 +53,7 @@ export declare class Dimension {
     /**
      * Whether or not a block is air or not
      * @param {Location | BlockLocation} location Location to test with
-     * @returns {boolean} Whether or not that location is empty
+     * @returns {boolean} Whether or not that location is empty (air)
      */
     isEmpty(location: Location | BlockLocation): boolean;
     /**

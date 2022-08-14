@@ -1,4 +1,5 @@
-import type { Block, BlockPermutation, DefinitionModifier } from "mojang-minecraft"
+import type { BlockPermutation, DefinitionModifier } from "mojang-minecraft"
+import type { Block } from "../Block/index.js"
 import type { Player, Entity } from "../Entity/index.js"
 import type { Item } from "../Item/index.js"
 import type { World } from "../World/index.js"

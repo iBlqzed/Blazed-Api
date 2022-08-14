@@ -1,5 +1,6 @@
-import { Player as IPlayer, Block, BlockRaycastOptions, CommandResult, Effect, EffectType, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, world, XYRotation } from "mojang-minecraft"
+import { Player as IPlayer, Block as IBlock, BlockRaycastOptions, CommandResult, Effect, EffectType, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, world, XYRotation } from "mojang-minecraft"
 import { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "mojang-minecraft-ui"
+import { Block } from "../Block/Block.js"
 import { Commands } from "../Commands/index.js"
 import { EntityInventory } from "../Inventory/index.js"
 import { Item } from "../Item/index.js"
@@ -57,7 +58,7 @@ export class Entity {
      * @returns {Block} Block in the entity's view vector
      */
     getBlockFromViewVector(options?: BlockRaycastOptions): Block {
-        return this.entity.getBlockFromViewVector(options)
+        return new Block(this.entity.getBlockFromViewVector(options))
     }
     /**
      * Get a component from the player
@@ -213,7 +214,7 @@ export class Entity {
         return this.entity.hasComponent(component)
     }
     /**
-     * Test whether or not the player has a certain tag
+     * Test for whether or not the player has a certain tag
      * @param {string} tag Tag to test for
      * @returns {boolean} Whether or not the entity has the tag
      */

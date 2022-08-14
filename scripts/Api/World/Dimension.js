@@ -1,4 +1,5 @@
 import { BlockLocation, Location } from "mojang-minecraft";
+import { Block } from "../Block/index.js";
 import { Entity, Player } from "../Entity/index";
 import { locationFunctions } from "../utils";
 export class Dimension {
@@ -21,7 +22,7 @@ export class Dimension {
      * @returns {Block} The block at that location
      */
     getBlock(location) {
-        return this.dimension.getBlock(location instanceof BlockLocation ? location : locationFunctions.locationToBlockLocation(location));
+        return new Block(this.dimension.getBlock(location instanceof BlockLocation ? location : locationFunctions.locationToBlockLocation(location)));
     }
     /**
      * Get a block from a ray
@@ -31,7 +32,7 @@ export class Dimension {
      * @returns {Block} First block to intercept with the ray
      */
     getBlockFromRay(location, direction, options) {
-        return this.dimension.getBlockFromRay(location instanceof Location ? location : locationFunctions.blockLocationToLocation(location), direction, options);
+        return new Block(this.dimension.getBlockFromRay(location instanceof Location ? location : locationFunctions.blockLocationToLocation(location), direction, options));
     }
     /**
      * Get all entities in the dimension
@@ -62,7 +63,7 @@ export class Dimension {
     /**
      * Whether or not a block is air or not
      * @param {Location | BlockLocation} location Location to test with
-     * @returns {boolean} Whether or not that location is empty
+     * @returns {boolean} Whether or not that location is empty (air)
      */
     isEmpty(location) {
         return this.dimension.isEmpty(location instanceof BlockLocation ? location : locationFunctions.locationToBlockLocation(location));

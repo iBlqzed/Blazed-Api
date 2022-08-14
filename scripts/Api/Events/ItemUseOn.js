@@ -1,4 +1,5 @@
 import { world } from "mojang-minecraft";
+import { Block } from "../Block/index.js";
 import { Player, Entity } from "../Entity/index.js";
 import { Item } from "../Item/index.js";
 export class ItemUseOn {
@@ -21,7 +22,7 @@ export class ItemUseOn {
                     callback({
                         entity: new Player(data.source),
                         item: new Item(data.item),
-                        block: data.source.dimension.getBlock(data.blockLocation),
+                        block: new Block(data.source.dimension.getBlock(data.blockLocation)),
                         cancel() {
                             data.cancel = true;
                         }
@@ -31,7 +32,7 @@ export class ItemUseOn {
                 callback({
                     entity: new Entity(data.source),
                     item: new Item(data.item),
-                    block: data.source.dimension.getBlock(data.blockLocation),
+                    block: new Block(data.source.dimension.getBlock(data.blockLocation)),
                     cancel() {
                         data.cancel = true;
                     }

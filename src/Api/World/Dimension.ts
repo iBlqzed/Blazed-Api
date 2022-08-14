@@ -1,4 +1,5 @@
-import { Player as IPlayer, Block, BlockLocation, BlockRaycastOptions, CommandResult, Dimension as IDimension, EntityQueryOptions, EntityRaycastOptions, ExplosionOptions, InventoryComponentContainer, Items, ItemStack, Location, Vector, world } from "mojang-minecraft";
+import { Player as IPlayer, BlockLocation, BlockRaycastOptions, CommandResult, Dimension as IDimension, EntityQueryOptions, EntityRaycastOptions, ExplosionOptions, InventoryComponentContainer, Items, ItemStack, Location, Vector, world } from "mojang-minecraft";
+import { Block } from "../Block/index.js";
 import { Entity, Player } from "../Entity/index";
 import { Item } from "../Item/index";
 import { locationFunctions } from "../utils";
@@ -27,7 +28,7 @@ export class Dimension {
      * @returns {Block} The block at that location
      */
     getBlock(location: BlockLocation | Location): Block {
-        return this.dimension.getBlock(location instanceof BlockLocation ? location : locationFunctions.locationToBlockLocation(location))
+        return new Block(this.dimension.getBlock(location instanceof BlockLocation ? location : locationFunctions.locationToBlockLocation(location)))
     }
     /**
      * Get a block from a ray
@@ -37,7 +38,7 @@ export class Dimension {
      * @returns {Block} First block to intercept with the ray
      */
     getBlockFromRay(location: Location | BlockLocation, direction: Vector, options?: BlockRaycastOptions): Block {
-        return this.dimension.getBlockFromRay(location instanceof Location ? location : locationFunctions.blockLocationToLocation(location), direction, options)
+        return new Block(this.dimension.getBlockFromRay(location instanceof Location ? location : locationFunctions.blockLocationToLocation(location), direction, options))
     }
     /**
      * Get all entities in the dimension
@@ -68,7 +69,7 @@ export class Dimension {
     /**
      * Whether or not a block is air or not
      * @param {Location | BlockLocation} location Location to test with
-     * @returns {boolean} Whether or not that location is empty
+     * @returns {boolean} Whether or not that location is empty (air)
      */
     isEmpty(location: Location | BlockLocation): boolean {
         return this.dimension.isEmpty(location instanceof BlockLocation ? location : locationFunctions.locationToBlockLocation(location))

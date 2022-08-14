@@ -1,4 +1,5 @@
 import { world } from "mojang-minecraft"
+import { Block } from "../Block/index.js"
 import { Player } from "../Entity/index.js"
 import { Events } from "../Types/index.js"
 
@@ -14,7 +15,7 @@ export class BlockPlace {
         this.arg = world.events.blockPlace.subscribe(({ player, block }) => {
             callback({
                 player: new Player(player),
-                block: block
+                block: new Block(block)
             })
         })
         return this

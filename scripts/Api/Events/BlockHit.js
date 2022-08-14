@@ -1,4 +1,5 @@
 import { world } from "mojang-minecraft";
+import { Block } from "../Block/index.js";
 import { Player, Entity } from "../Entity/index";
 export class BlockHit {
     constructor() {
@@ -15,7 +16,7 @@ export class BlockHit {
             if (data.hitBlock)
                 callback({
                     entity: data.entity.id === 'minecraft:player' ? new Player(data.entity) : new Entity(data.entity),
-                    hitBlock: data.hitBlock
+                    hitBlock: new Block(data.hitBlock)
                 });
         });
         return this;
