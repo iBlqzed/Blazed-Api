@@ -394,6 +394,13 @@ export class Player extends Entity {
         return this.getInventory().getItem(this.entity.selectedSlot);
     }
     /**
+     * Get the IPlayer
+     * @returns {IPlayer} The IPlayer
+     */
+    getIEntity() {
+        return this.entity;
+    }
+    /**
      * Get an item cooldown from an item catagory
      * @param {string} itemCatagory Catagory of cooldown to test for
      * @returns {number} The length of that cooldown
@@ -444,6 +451,13 @@ export class Player extends Entity {
         return this.hasTag(`is_moving`);
     }
     /**
+     * Test for whether or not the player is on fire
+     * @returns {boolean} Whether or not the player is on fire
+     */
+    isOnFire() {
+        return this.hasTag('is_on_fire');
+    }
+    /**
      * Test for whether or not the player is sleeping
      * @returns {boolean} Whether or not the player is sleeping
      */
@@ -465,11 +479,11 @@ export class Player extends Entity {
         return this.hasTag('is_sprinting');
     }
     /**
-     * Test for whether or not the player is on fire
-     * @returns {boolean} Whether or not the player is on fire
+     * Test for whether or not the player is swimming
+     * @returns {boolean} Whether or not the player is swimming
      */
-    isOnFire() {
-        return this.hasTag('is_on_fire');
+    isSwimming() {
+        return this.hasTag('is_swimming');
     }
     /**
      * Kick the player
@@ -522,17 +536,6 @@ export class Player extends Entity {
         catch {
             return { error: true };
         }
-    }
-    /**
-     * Show a form to the player
-     * @param {ActionFormData | ModalFormData | MessageFormData} form Form to show to the player
-     * @param {(response: ActionFormResponse | ModalFormResponse | MessageFormResponse) => void} callback Code to run when the form is shown
-     */
-    showForm(form, callback) {
-        form.show(this.entity).then(result => {
-            // @ts-ignore
-            callback(result);
-        });
     }
 }
 class PlayerLog {

@@ -14,7 +14,8 @@
                     "blazedapi:is_jumping",
                     "blazedapi:is_on_fire",
                     "blazedapi:is_sneaking",
-                    "blazedapi:is_sprinting"
+                    "blazedapi:is_sprinting",
+                    "blazedapi:is_swimming"
                 ]
             },
             "animations": {
@@ -24,7 +25,8 @@
                 "blazedapi:is_jumping": "controller.animation.player.is_jumping",
                 "blazedapi:is_on_fire": "controller.animation.player.is_on_fire",
                 "blazedapi:is_sneaking": "controller.animation.player.is_sneaking",
-                "blazedapi:is_sprinting": "controller.animation.player.is_sprinting"
+                "blazedapi:is_sprinting": "controller.animation.player.is_sprinting",
+                "blazedapi:is_swimming": "controller.animation.player.is_swimming"
             }
         },
         "component_groups": {

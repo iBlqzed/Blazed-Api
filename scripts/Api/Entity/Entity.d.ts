@@ -1,5 +1,4 @@
 import { Player as IPlayer, BlockRaycastOptions, CommandResult, Effect, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, XYRotation } from "mojang-minecraft";
-import { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "mojang-minecraft-ui";
 import { Block } from "../Block/Block.js";
 import { EntityInventory } from "../Inventory/index.js";
 import { Item } from "../Item/index.js";
@@ -278,6 +277,11 @@ export declare class Player extends Entity {
      */
     getHeldItem(): Item;
     /**
+     * Get the IPlayer
+     * @returns {IPlayer} The IPlayer
+     */
+    getIEntity(): IPlayer;
+    /**
      * Get an item cooldown from an item catagory
      * @param {string} itemCatagory Catagory of cooldown to test for
      * @returns {number} The length of that cooldown
@@ -314,6 +318,11 @@ export declare class Player extends Entity {
      */
     isMoving(): boolean;
     /**
+     * Test for whether or not the player is on fire
+     * @returns {boolean} Whether or not the player is on fire
+     */
+    isOnFire(): boolean;
+    /**
      * Test for whether or not the player is sleeping
      * @returns {boolean} Whether or not the player is sleeping
      */
@@ -329,10 +338,10 @@ export declare class Player extends Entity {
      */
     isSprinting(): boolean;
     /**
-     * Test for whether or not the player is on fire
-     * @returns {boolean} Whether or not the player is on fire
+     * Test for whether or not the player is swimming
+     * @returns {boolean} Whether or not the player is swimming
      */
-    isOnFire(): boolean;
+    isSwimming(): boolean;
     /**
      * Kick the player
      * @param {string} reason The reason they got kicked
@@ -362,12 +371,6 @@ export declare class Player extends Entity {
         error: boolean;
         data?: any;
     };
-    /**
-     * Show a form to the player
-     * @param {ActionFormData | ModalFormData | MessageFormData} form Form to show to the player
-     * @param {(response: ActionFormResponse | ModalFormResponse | MessageFormResponse) => void} callback Code to run when the form is shown
-     */
-    showForm<form extends ActionFormData | ModalFormData | MessageFormData, response extends (response: form extends ActionFormData ? ActionFormResponse : form extends ModalFormData ? ModalFormResponse : form extends MessageFormData ? MessageFormResponse : undefined) => void>(form: form, callback: response): void;
 }
 declare class PlayerLog {
     protected name: string;

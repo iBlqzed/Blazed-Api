@@ -175,6 +175,31 @@
                     ]
                 }
             }
+        },
+        "controller.animation.player.is_swimming": {
+            "initial_state": "not_swimming",
+            "states": {
+                "not_swimming": {
+                    "on_entry": [
+                        "/tag @s remove is_swimming"
+                    ],
+                    "transitions": [
+                        {
+                            "swimming": "query.is_swimming"
+                        }
+                    ]
+                },
+                "swimming": {
+                    "on_entry": [
+                        "/tag @s add is_swimming"
+                    ],
+                    "transitions": [
+                        {
+                            "not_swimming": "!query.is_swimming"
+                        }
+                    ]
+                }
+            }
         }
     }
 }
