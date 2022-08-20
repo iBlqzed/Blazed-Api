@@ -110,6 +110,11 @@ export declare class Entity {
      */
     getLocation(): Location;
     /**
+     * Get the entity's max health (if they have health)
+     * @returns {number} The entity's max health
+     */
+    getMaxHealth(): number;
+    /**
      * Get the entity's name tag
      * @returns {string} The entity's nametag
      */
@@ -277,6 +282,11 @@ export declare class Player extends Entity {
      */
     getHeldItem(): Item;
     /**
+     * Get the player's id
+     * @returns {"minecraft:player"} The player's id
+     */
+    getId(): "minecraft:player";
+    /**
      * Get the IPlayer
      * @returns {IPlayer} The IPlayer
      */
@@ -302,6 +312,11 @@ export declare class Player extends Entity {
      * @returns {ScreenDisplay} The player's screen display
      */
     getScreenDisplay(): ScreenDisplay;
+    /**
+     * Get the player's selected slot
+     * @returns {number} The selected slot
+     */
+    getSelectedSlot(): number;
     /**
      * Test for whether or not the player is dead
      * @returns {boolean} Whether or not the player is dead
@@ -342,6 +357,11 @@ export declare class Player extends Entity {
      * @returns {boolean} Whether or not the player is swimming
      */
     isSwimming(): boolean;
+    /**
+     * Test for whether or not the player is using an item
+     * @returns {boolean} Whether or not the player is using an item
+     */
+    isUsingItem(): boolean;
     /**
      * Kick the player
      * @param {string} reason The reason they got kicked

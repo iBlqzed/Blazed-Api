@@ -37,7 +37,7 @@ export class EntityInventory {
     getItem(slot) {
         if (slot < 0 || slot > this.size + 1)
             throw new Error(`Slot count is to small or to large! Method "inventory.getItem()"`);
-        return new Item(this._inventory.container.getItem(slot) ?? "minecraft:air");
+        return new Item(this._inventory.container.getItem(slot) ?? "minecraft:air", { slot, entity: this._entity });
     }
     /**
      * Set an item in the inventory

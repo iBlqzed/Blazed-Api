@@ -3,7 +3,8 @@ import { Player } from "../Entity/index";
 import { CommandData, CommandInfo } from "../Types/index";
 export declare class Commands {
     static registeredCommands: CommandData[];
-    static options?: ClientOptions;
+    static clients: ClientOptions[];
+    options?: ClientOptions;
     constructor(options?: ClientOptions);
     /**
      * Create a new command

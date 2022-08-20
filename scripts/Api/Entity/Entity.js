@@ -145,6 +145,17 @@ export class Entity {
         return this.entity.location;
     }
     /**
+     * Get the entity's max health (if they have health)
+     * @returns {number} The entity's max health
+     */
+    getMaxHealth() {
+        const health = this.getHealth();
+        this.getComponent('health').resetToMaxValue();
+        const z = this.getHealth();
+        this.setHealth(health);
+        return z;
+    }
+    /**
      * Get the entity's name tag
      * @returns {string} The entity's nametag
      */
@@ -394,6 +405,13 @@ export class Player extends Entity {
         return this.getInventory().getItem(this.entity.selectedSlot);
     }
     /**
+     * Get the player's id
+     * @returns {"minecraft:player"} The player's id
+     */
+    getId() {
+        return this.entity.id;
+    }
+    /**
      * Get the IPlayer
      * @returns {IPlayer} The IPlayer
      */
@@ -428,6 +446,13 @@ export class Player extends Entity {
      */
     getScreenDisplay() {
         return this.entity.onScreenDisplay;
+    }
+    /**
+     * Get the player's selected slot
+     * @returns {number} The selected slot
+     */
+    getSelectedSlot() {
+        return this.entity.selectedSlot;
     }
     /**
      * Test for whether or not the player is dead
@@ -486,6 +511,13 @@ export class Player extends Entity {
         return this.hasTag('is_swimming');
     }
     /**
+     * Test for whether or not the player is using an item
+     * @returns {boolean} Whether or not the player is using an item
+     */
+    isUsingItem() {
+        return this.hasTag('is_using_item');
+    }
+    /**
      * Kick the player
      * @param {string} reason The reason they got kicked
      */
@@ -521,8 +553,6 @@ export class Player extends Entity {
      */
     runCommand(command) {
         try {
-            if (!Commands.options?.command?.enabled)
-                return { error: false, data: this.entity.runCommand(command) };
             if (command.startsWith('/'))
                 return { error: false, data: this.entity.runCommand(command.slice(1)) };
             const args = command.trim().split(/\s+/g);

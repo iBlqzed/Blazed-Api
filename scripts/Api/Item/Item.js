@@ -4,8 +4,9 @@ export class Item {
      * Create a new item class with an item stack or item id
      * @param {ItemStack | string} item Item stack or id of the item
      */
-    constructor(item) {
+    constructor(item, data) {
         this.itemStack = item instanceof ItemStack ? item : new ItemStack(Items.get(item));
+        this.data = data;
     }
     /**
      * Add an enchant to the item
@@ -16,9 +17,10 @@ export class Item {
         const eC = this.itemStack?.getComponent('enchantments'), eL = eC.enchantments;
         if (!eC)
             return;
-        //@ts-ignore
-        const rV = eL.addEnchantment(new Enchantment(MinecraftEnchantmentTypes[enchant], enchant.level));
+        const rV = eL.addEnchantment(new Enchantment(MinecraftEnchantmentTypes[enchant.enchant], enchant.level ?? 1));
         eC.enchantments = eL;
+        if (this.data)
+            this.data.entity.getInventory().setItem(this.data.slot, this);
         return rV;
     }
     /**
@@ -141,6 +143,8 @@ export class Item {
         // @ts-ignore
         eL.removeEnchantment(MinecraftEnchantmentTypes[enchant]);
         eC.enchantments = eL;
+        if (this.data)
+            this.data.entity.getInventory().setItem(this.data.slot, this);
     }
     /**
      * Set the item's amount
@@ -148,6 +152,8 @@ export class Item {
      */
     setAmount(amount) {
         this.itemStack && (this.itemStack.amount = amount);
+        if (this.data)
+            this.data.entity.getInventory().setItem(this.data.slot, this);
     }
     /**
      * Set the item's data value
@@ -155,6 +161,17 @@ export class Item {
      */
     setData(data) {
         this.itemStack && (this.itemStack.data = data);
+        if (this.data)
+            this.data.entity.getInventory().setItem(this.data.slot, this);
+    }
+    /**
+     * Set the item stack
+     * @param {ItemStack} item The item stack to set as the new item stack
+     */
+    setItemStack(item) {
+        this.itemStack = item;
+        if (this.data)
+            this.data.entity.getInventory().setItem(this.data.slot, this);
     }
     /**
      * Set the item's lore
@@ -162,6 +179,8 @@ export class Item {
      */
     setLore(lore) {
         this.itemStack && this.itemStack.setLore(lore);
+        if (this.data)
+            this.data.entity.getInventory().setItem(this.data.slot, this);
     }
     /**
      * Set the item's name
@@ -169,6 +188,8 @@ export class Item {
      */
     setName(name) {
         this.itemStack && (this.itemStack.nameTag = name);
+        if (this.data)
+            this.data.entity.getInventory().setItem(this.data.slot, this);
     }
     /**
      * Trigger an item event

@@ -21,4 +21,5 @@ export interface CommandInfo {
 
 export interface CommandData extends CommandInfo {
     callback(data: { player: Player, args: string[] }): void
+    prefix: string
 }

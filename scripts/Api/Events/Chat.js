@@ -1,4 +1,5 @@
 import { world } from "mojang-minecraft";
+import { Commands } from "../Commands/index";
 import { Player } from "../Entity/index";
 export class Chat {
     constructor() {
@@ -12,9 +13,12 @@ export class Chat {
      */
     on(callback) {
         this.arg = world.events.beforeChat.subscribe(data => {
+            const { message } = data;
+            if (Commands.clients.find(e => message.startsWith(e.command?.prefix)))
+                return;
             callback({
                 player: new Player(data.sender),
-                message: data.message,
+                message: message,
                 cancel() {
                     data.cancel = true;
                 }

@@ -1,15 +1,23 @@
 import { Enchantment, ItemStack, MinecraftEnchantmentTypes } from "mojang-minecraft";
+import { Entity } from "../Entity/index.js";
 import { ItemComponents } from "../Types/index";
 export declare class Item {
     /**
      * The item stack
      */
-    protected readonly itemStack: ItemStack;
+    protected itemStack: ItemStack;
+    protected readonly data?: {
+        slot: number;
+        entity: Entity;
+    };
     /**
      * Create a new item class with an item stack or item id
      * @param {ItemStack | string} item Item stack or id of the item
      */
-    constructor(item: ItemStack | string);
+    constructor(item: ItemStack | string, data?: {
+        slot: number;
+        entity: Entity;
+    });
     /**
      * Add an enchant to the item
      * @param {{ enchant: keyof typeof MinecraftEnchantmentTypes, level?: number }} enchant Enchant to add to the item
@@ -98,6 +106,11 @@ export declare class Item {
      * @param {number} data The item's new data value
      */
     setData(data: number): void;
+    /**
+     * Set the item stack
+     * @param {ItemStack} item The item stack to set as the new item stack
+     */
+    setItemStack(item: ItemStack): void;
     /**
      * Set the item's lore
      * @param {number} lore The item's new lore

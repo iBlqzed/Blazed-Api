@@ -13,9 +13,10 @@ export class ItemUse {
      */
     on(callback: (data: Events['ItemUse']) => void): ItemUse {
         this.arg = world.events.beforeItemUse.subscribe(data => {
+            const entity = data.source.id === 'minecraft:player' ? new Player(data.source as IPlayer) : new Entity(data.source)
             callback({
-                entity: data.source.id === 'minecraft:player' ? new Player(data.source as IPlayer) : new Entity(data.source),
-                item: new Item(data.item),
+                entity,
+                item: entity.isPlayer() ? new Item(data.item, { slot: entity.getSelectedSlot(), entity }) : new Item(data.item),
                 cancel(): void {
                     data.cancel = true
                 }

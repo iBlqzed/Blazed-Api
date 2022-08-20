@@ -22,4 +22,5 @@ export interface CommandData extends CommandInfo {
         player: Player;
         args: string[];
     }): void;
+    prefix: string;
 }

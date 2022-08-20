@@ -1,17 +1,20 @@
-import { Enchantment, ItemEnchantsComponent, Items, ItemStack, MinecraftEnchantmentTypes } from "mojang-minecraft";
+import { Enchantment, EnchantmentType, ItemEnchantsComponent, Items, ItemStack, MinecraftEnchantmentTypes } from "mojang-minecraft";
+import { Entity } from "../Entity/index.js";
 import { ItemComponents } from "../Types/index";
 
 export class Item {
     /**
      * The item stack
      */
-    protected readonly itemStack: ItemStack
+    protected itemStack: ItemStack
+    protected readonly data?: { slot: number, entity: Entity }
     /**
      * Create a new item class with an item stack or item id
      * @param {ItemStack | string} item Item stack or id of the item
      */
-    constructor(item: ItemStack | string) {
+    constructor(item: ItemStack | string, data?: { slot: number, entity: Entity }) {
         this.itemStack = item instanceof ItemStack ? item : new ItemStack(Items.get(item))
+        this.data = data
     }
     /**
      * Add an enchant to the item
@@ -21,9 +24,9 @@ export class Item {
     addEnchant(enchant: { enchant: keyof typeof MinecraftEnchantmentTypes, level?: number }): boolean {
         const eC = this.itemStack?.getComponent('enchantments') as ItemEnchantsComponent, eL = eC.enchantments
         if (!eC) return;
-        //@ts-ignore
-        const rV = eL.addEnchantment(new Enchantment(MinecraftEnchantmentTypes[enchant], enchant.level))
+        const rV = eL.addEnchantment(new Enchantment(MinecraftEnchantmentTypes[enchant.enchant] as EnchantmentType, enchant.level ?? 1))
         eC.enchantments = eL
+        if (this.data) this.data.entity.getInventory().setItem(this.data.slot, this)
         return rV
     }
     /**
@@ -138,6 +141,7 @@ export class Item {
         // @ts-ignore
         eL.removeEnchantment(MinecraftEnchantmentTypes[enchant])
         eC.enchantments = eL
+        if (this.data) this.data.entity.getInventory().setItem(this.data.slot, this)
     }
     /**
      * Set the item's amount
@@ -145,6 +149,7 @@ export class Item {
      */
     setAmount(amount: number): void {
         this.itemStack && (this.itemStack.amount = amount)
+        if (this.data) this.data.entity.getInventory().setItem(this.data.slot, this)
     }
     /**
      * Set the item's data value
@@ -152,6 +157,15 @@ export class Item {
      */
     setData(data: number): void {
         this.itemStack && (this.itemStack.data = data)
+        if (this.data) this.data.entity.getInventory().setItem(this.data.slot, this)
+    }
+    /**
+     * Set the item stack
+     * @param {ItemStack} item The item stack to set as the new item stack
+     */
+    setItemStack(item: ItemStack): void {
+        this.itemStack = item
+        if (this.data) this.data.entity.getInventory().setItem(this.data.slot, this)
     }
     /**
      * Set the item's lore
@@ -159,6 +173,7 @@ export class Item {
      */
     setLore(lore: string[]): void {
         this.itemStack && this.itemStack.setLore(lore)
+        if (this.data) this.data.entity.getInventory().setItem(this.data.slot, this)
     }
     /**
      * Set the item's name
@@ -166,6 +181,7 @@ export class Item {
      */
     setName(name: string): void {
         this.itemStack && (this.itemStack.nameTag = name)
+        if (this.data) this.data.entity.getInventory().setItem(this.data.slot, this)
     }
     /**
      * Trigger an item event

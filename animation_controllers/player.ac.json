@@ -200,6 +200,31 @@
                     ]
                 }
             }
+        },
+        "controller.animation.player.is_using_item": {
+            "initial_state": "not_using_item",
+            "states": {
+                "not_using_item": {
+                    "on_entry": [
+                        "/tag @s remove is_using_item"
+                    ],
+                    "transitions": [
+                        {
+                            "using_item": "query.is_using_item"
+                        }
+                    ]
+                },
+                "using_item": {
+                    "on_entry": [
+                        "/tag @s add is_using_item"
+                    ],
+                    "transitions": [
+                        {
+                            "not_using_item": "!query.is_using_item"
+                        }
+                    ]
+                }
+            }
         }
     }
 }

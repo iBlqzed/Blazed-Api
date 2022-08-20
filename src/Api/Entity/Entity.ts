@@ -150,6 +150,17 @@ export class Entity {
         return this.entity.location
     }
     /**
+     * Get the entity's max health (if they have health)
+     * @returns {number} The entity's max health
+     */
+    getMaxHealth(): number {
+        const health = this.getHealth()
+        this.getComponent('health').resetToMaxValue()
+        const z = this.getHealth()
+        this.setHealth(health)
+        return z
+    }
+    /**
      * Get the entity's name tag
      * @returns {string} The entity's nametag
      */
@@ -394,6 +405,13 @@ export class Player extends Entity {
         return this.getInventory().getItem(this.entity.selectedSlot)
     }
     /**
+     * Get the player's id
+     * @returns {"minecraft:player"} The player's id
+     */
+    getId(): "minecraft:player" {
+        return this.entity.id as "minecraft:player"
+    }
+    /**
      * Get the IPlayer
      * @returns {IPlayer} The IPlayer
      */
@@ -428,6 +446,13 @@ export class Player extends Entity {
      */
     getScreenDisplay(): ScreenDisplay {
         return this.entity.onScreenDisplay
+    }
+    /**
+     * Get the player's selected slot
+     * @returns {number} The selected slot
+     */
+    getSelectedSlot(): number {
+        return this.entity.selectedSlot
     }
     /**
      * Test for whether or not the player is dead
@@ -486,6 +511,13 @@ export class Player extends Entity {
         return this.hasTag('is_swimming')
     }
     /**
+     * Test for whether or not the player is using an item
+     * @returns {boolean} Whether or not the player is using an item
+     */
+    isUsingItem(): boolean {
+        return this.hasTag('is_using_item')
+    }
+    /**
      * Kick the player
      * @param {string} reason The reason they got kicked
      */
@@ -520,7 +552,6 @@ export class Player extends Entity {
      */
     runCommand(command: string): { error: boolean, data?: any } {
         try {
-            if (!Commands.options?.command?.enabled) return { error: false, data: this.entity.runCommand(command) };
             if (command.startsWith('/')) return { error: false, data: this.entity.runCommand(command.slice(1)) };
             const args = command.trim().split(/\s+/g)
             const cmdName = args.shift().toLowerCase()
