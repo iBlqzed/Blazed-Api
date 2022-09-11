@@ -14,9 +14,9 @@ export interface CommandInfo {
      */
     aliases?: string[]
     /**
-     * Permissions in tags
+     * Callback for whether or not the player has valid permissions
      */
-    permissions?: string[]
+    permission?: (player: Player) => boolean
 }
 
 export interface CommandData extends CommandInfo {

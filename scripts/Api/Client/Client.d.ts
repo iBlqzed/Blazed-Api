@@ -1,5 +1,7 @@
 import { Commands } from "../Commands/index.js";
 import { DatabaseUtils } from "../Database/index.js";
+import { ScoreboardManager } from "../Scoreboard/index.js";
+import { Time } from "../Time/index.js";
 import { Events, ClientOptions } from "../Types/index.js";
 import { World } from "../World/index";
 export declare class Client {
@@ -19,6 +21,14 @@ export declare class Client {
      * Database utilities
      */
     readonly database: DatabaseUtils;
+    /**
+     * Scoreboard manager
+     */
+    readonly scoreboards: ScoreboardManager;
+    /**
+     * Mess with time stuff
+     */
+    readonly time: Time;
     constructor(options?: ClientOptions);
     /**
      * Listen to an event, and run a callback off of it
@@ -46,4 +56,9 @@ export declare class Client {
         error: boolean;
         data: any;
     };
+    /**
+     * Run an array of command
+     * @param {string[]} cmds Commands to run
+     */
+    runCommands(cmds: string[]): void;
 }

@@ -2,36 +2,6 @@ import { world, BlockLocation, Location } from "mojang-minecraft";
 import { Entity } from "./Entity/index";
 
 /**
- * Delay executing a function
- * @param {() => void} callback Code you want to execute when the delay is finished
- * @param {number} tick Time in ticks until the callback runs
- * @param {boolean} loop Whether or not the code should loop or not
- * @example setTickTimeout(() => {
- * console.warn(`This was called after 20 ticks!`)
- * }, 20)
- */
-export function setTickTimeout(callback: () => void, tick: number, loop?: boolean): any {
-    let cT = 0
-    const tE = world.events.tick.subscribe((data) => {
-        if (cT === 0) cT = data.currentTick + tick
-        if (cT <= data.currentTick) {
-            try { callback() } catch (e) { console.warn(`${e} : ${e.stack}`) }
-            if (loop) cT += tick
-            else world.events.tick.unsubscribe(tE)
-        }
-    })
-    return tE
-}
-
-/**
- * Clear a tick timeout
- * @param {any} timeout Timeout to clear
- */
-export function clearTickTimeout(timeout: any): void {
-    world.events.tick.unsubscribe(timeout)
-}
-
-/**
  * Broadcast a message
  * @param {string} message Message to broadcast
  * @example broadcastMessage('This message was sent to everyone!')
@@ -118,49 +88,7 @@ export function runCommand(cmd: string, executor?: Entity): { error: boolean, da
     try {
         if (executor) return { error: false, data: executor.runCommand(cmd) }
         return { error: false, data: world.getDimension('overworld').runCommand(cmd) }
-    } catch {
-        return { error: true, data: undefined }
+    } catch (e) {
+        return { error: true, data: e }
     }
-}
-
-/**
- * Run an array of commands (if a command starts with "%", then it will be conditional!)
- * @param {string[]} commands Commands to run
- * @param {Entity} executor Entity to run all of the commands
- * @returns {{error: boolean}} Whether or not there was an error running all the commands
- * @example runCommands([
- * `testfor @s[hasitem={item=dirt}]`,
- * `%say I have dirt in my hand!`
- * ], player)
- */
-export function runCommands(commands: string[], executor?: Entity): { error: boolean } {
-    try {
-        const cR = /^%/;
-        if (cR.test(commands[0])) throw new TypeError('[Server] >> First command in runCommands function can not be conditional')
-        let cE = false
-        for (const cM of commands) {
-            if (cE && cR.test(cM)) continue
-            cE = runCommand(cM.replace(cR, ''), executor).error
-        }
-        return { error: false }
-    } catch {
-        return { error: true }
-    }
-}
-
-/**
- * Wait a certain amount of ticks
- * @param {number} ticks Amount of ticks to wait
- * @returns {Promise<void>} No need to mess with this
- */
-export async function wait(ticks: number): Promise<void> {
-    let t = 0
-    return await new Promise(resolve => {
-        const event = world.events.tick.subscribe(({ currentTick }) => {
-            if (t === 0) t = currentTick + ticks
-            if (!(t < currentTick)) return
-            world.events.tick.unsubscribe(event)
-            resolve()
-        })
-    })
 }

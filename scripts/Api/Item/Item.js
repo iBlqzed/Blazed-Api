@@ -88,12 +88,9 @@ export class Item {
      */
     getEnchants() {
         const eL = [];
-        for (const _ench of Object.keys(MinecraftEnchantmentTypes)) {
-            const ench = this.getEnchant(_ench);
-            if (!ench)
-                continue;
-            eL.push(ench);
-        }
+        const _eL = this.getComponent("enchantments").enchantments;
+        for (const e of _eL)
+            eL.push(e);
         return eL;
     }
     /**

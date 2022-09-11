@@ -1,8 +1,6 @@
 import { world } from 'mojang-minecraft'
 import { Commands } from './Commands/index.js'
 import { Player } from './Entity/index.js'
-import { broadcastMessage } from './utils.js'
-
 export * from './Block/index.js'
 export * from './Client/index.js'
 export * from './Database/index.js'
@@ -23,6 +21,6 @@ world.events.beforeChat.subscribe((data) => {
     const cmd = args.shift().toLowerCase()
     const cmdData = Commands.registeredCommands.find(command => command.prefix === opts.command.prefix && (command.name === cmd || command.aliases?.includes(cmd)))
     if (!cmdData) return player.message(opts.command.invalidCommandError ?? `§cInvalid command!`)
-    if (cmdData.permissions && cmdData.permissions.find(tag => !data.sender.hasTag(tag))) return player.message(opts.command.invalidPermissionsError ?? `§cInvalid permission!`)
+    if (cmdData.permission && !cmdData.permission(player)) return player.message(opts.command.invalidPermissionsError ?? `§cInvalid permission!`)
     cmdData.callback({ player, args })
 })

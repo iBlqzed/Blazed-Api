@@ -1,7 +1,9 @@
-import { world } from "mojang-minecraft";
+import { system, world } from "mojang-minecraft";
 import { Commands } from "../Commands/index.js";
 import { DatabaseUtils } from "../Database/index.js";
-import { events } from '../Events/index';
+import { events } from '../Events/index.js';
+import { ScoreboardManager } from "../Scoreboard/index.js";
+import { Time } from "../Time/index.js";
 import { World } from "../World/index";
 export class Client {
     constructor(options) {
@@ -10,17 +12,23 @@ export class Client {
          */
         this.world = new World();
         /**
-         * Create and remove game commands
-         */
-        this.commands = new Commands();
-        /**
          * Database utilities
          */
         this.database = new DatabaseUtils();
+        /**
+         * Scoreboard manager
+         */
+        this.scoreboards = new ScoreboardManager();
+        /**
+         * Mess with time stuff
+         */
+        this.time = new Time();
         if (options?.command)
             if (!options.command.prefix)
                 options.command.prefix = '-';
         this.options = options;
+        if (options && "watchdog" in options && options.watchdog)
+            system.events.beforeWatchdogTerminate.subscribe(data => (data.cancel = true));
         this.commands = new Commands(options);
     }
     /**
@@ -67,6 +75,21 @@ export class Client {
         }
         catch {
             return { error: true, data: undefined };
+        }
+    }
+    /**
+     * Run an array of command
+     * @param {string[]} cmds Commands to run
+     */
+    runCommands(cmds) {
+        const cR = /^%/;
+        if (cR.test(cmds[0]))
+            throw new TypeError('[Server] >> First command in runCommands function can not be conditional');
+        let cE = false;
+        for (const cM of cmds) {
+            if (cE && cR.test(cM))
+                continue;
+            cE = this.runCommand(cM.replace(cR, '')).error;
         }
     }
 }

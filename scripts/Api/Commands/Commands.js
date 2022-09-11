@@ -21,7 +21,7 @@ export class Commands {
             name: info.name.toLowerCase().split(' ')[0],
             description: info.description ?? undefined,
             aliases: info.aliases?.map(aL => aL.toLowerCase().split(' ')[0]) ?? [],
-            permissions: info.permissions ?? [],
+            permission: info.permission,
             prefix: this.options.command.prefix,
             callback
         });

@@ -22,7 +22,7 @@ world.events.beforeChat.subscribe((data) => {
     const cmdData = Commands.registeredCommands.find(command => command.prefix === opts.command.prefix && (command.name === cmd || command.aliases?.includes(cmd)));
     if (!cmdData)
         return player.message(opts.command.invalidCommandError ?? `§cInvalid command!`);
-    if (cmdData.permissions && cmdData.permissions.find(tag => !data.sender.hasTag(tag)))
+    if (cmdData.permission && !cmdData.permission(player))
         return player.message(opts.command.invalidPermissionsError ?? `§cInvalid permission!`);
     cmdData.callback({ player, args });
 });

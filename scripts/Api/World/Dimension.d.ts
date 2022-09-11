@@ -51,17 +51,14 @@ export declare class Dimension {
      */
     getEntitiesFromRay(location: Location | BlockLocation, direction: Vector, options?: EntityRaycastOptions): Entity[];
     /**
-     * Whether or not a block is air or not
-     * @param {Location | BlockLocation} location Location to test with
-     * @returns {boolean} Whether or not that location is empty (air)
-     */
-    isEmpty(location: Location | BlockLocation): boolean;
-    /**
      * Run a command
      * @param {string} command Command to run
      * @returns {any} Command data + error
      */
-    runCommand(command: string): any;
+    runCommand(command: string): {
+        error: boolean;
+        data: any;
+    };
     /**
      * Runs a command asynchronously from the context of the broader dimension.
      * @param command Command to run

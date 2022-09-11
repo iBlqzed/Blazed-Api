@@ -13,21 +13,9 @@ export class ItemUseOn {
      * Add a listener for the event
      */
     on(callback: (data: Events['ItemUseOn']) => void): ItemUseOn {
-        const log: { [key: string]: number } = {}
         this.arg = world.events.beforeItemUseOn.subscribe(data => {
-            if (data.source.id === "minecraft:player") {
-                const oldLog = log[(data.source as IPlayer).name] ?? Date.now() - 102
-                log[(data.source as IPlayer).name] = Date.now()
-                if ((oldLog + 100) < Date.now()) callback({
-                    entity: new Player(data.source as IPlayer),
-                    item: new Item(data.item),
-                    block: new Block(data.source.dimension.getBlock(data.blockLocation)),
-                    cancel(): void {
-                        data.cancel = true
-                    }
-                })
-            } else callback({
-                entity: new Entity(data.source),
+            callback({
+                entity: data.source.id === "minecraft:player" ? new Player(data.source as IPlayer) : new Entity(data.source),
                 item: new Item(data.item),
                 block: new Block(data.source.dimension.getBlock(data.blockLocation)),
                 cancel(): void {
@@ -44,3 +32,9 @@ export class ItemUseOn {
         world.events.beforeItemUseOn.unsubscribe(this.arg)
     }
 }
+
+/**
+const oldLog = log[(data.source as IPlayer).name] ?? Date.now() - 102
+log[(data.source as IPlayer).nam[e] = Date.now()
+if ((oldLog + 100) < Date.now())]
+ */

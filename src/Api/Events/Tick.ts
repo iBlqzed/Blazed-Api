@@ -10,8 +10,8 @@ export class Tick {
      * Add a listener for the event
      */
     on(callback: (data: Events['Tick']) => void): Tick {
-        this.arg = world.events.tick.subscribe(data => {
-            callback()
+        this.arg = world.events.tick.subscribe(({ currentTick }) => {
+            callback(currentTick)
         })
         return this
     }

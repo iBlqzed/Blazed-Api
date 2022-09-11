@@ -1,10 +1,10 @@
-import { world } from "mojang-minecraft";
+import { system, world } from "mojang-minecraft";
 import { Commands } from "../Commands/index.js";
 import { DatabaseUtils } from "../Database/index.js";
-import { Player } from "../Entity/index.js";
-import { events } from '../Events/index'
+import { events } from '../Events/index.js'
+import { ScoreboardManager } from "../Scoreboard/index.js";
+import { Time } from "../Time/index.js";
 import { Events, ClientOptions } from "../Types/index.js";
-import { broadcastMessage } from "../utils.js";
 import { World } from "../World/index";
 
 export class Client {
@@ -19,14 +19,23 @@ export class Client {
     /**
      * Create and remove game commands
      */
-    readonly commands = new Commands()
+    readonly commands: Commands
     /**
      * Database utilities
      */
     readonly database = new DatabaseUtils()
+    /**
+     * Scoreboard manager
+     */
+    readonly scoreboards = new ScoreboardManager()
+    /**
+     * Mess with time stuff
+     */
+    readonly time = new Time()
     constructor(options?: ClientOptions) {
         if (options?.command) if (!options.command.prefix) options.command.prefix = '-'
         this.options = options
+        if (options && "watchdog" in options && options.watchdog) system.events.beforeWatchdogTerminate.subscribe(data => (data.cancel = true))
         this.commands = new Commands(options)
     }
     /**
@@ -71,6 +80,19 @@ export class Client {
             return { error: false, data: world.getDimension('overworld').runCommand(cmd) }
         } catch {
             return { error: true, data: undefined }
+        }
+    }
+    /**
+     * Run an array of command
+     * @param {string[]} cmds Commands to run
+     */
+    runCommands(cmds: string[]): void {
+        const cR = /^%/
+        if (cR.test(cmds[0])) throw new TypeError('[Server] >> First command in runCommands function can not be conditional')
+        let cE = false
+        for (const cM of cmds) {
+            if (cE && cR.test(cM)) continue
+            cE = this.runCommand(cM.replace(cR, '')).error
         }
     }
 }

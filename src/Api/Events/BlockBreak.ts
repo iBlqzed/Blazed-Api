@@ -2,7 +2,6 @@ import { world } from "mojang-minecraft"
 import { Player } from "../Entity/index.js"
 import { Block } from "../Block/index.js"
 import { Events } from "../Types/index.js"
-import { setTickTimeout } from "../utils.js"
 
 export class BlockBreak {
     /**
@@ -20,7 +19,10 @@ export class BlockBreak {
                 brokenBlockPermutation,
                 cancel(): void {
                     player.dimension.getBlock(block.location).setPermutation(brokenBlockPermutation)
-                    setTickTimeout(() => player.dimension.getEntitiesAtBlockLocation(block.location).filter(entity => entity.id === 'minecraft:item').forEach(item => item.kill()), 0)
+                    const e = world.events.tick.subscribe(() => {
+                        world.events.tick.unsubscribe(e)
+                        player.dimension.getEntitiesAtBlockLocation(block.location).filter(entity => entity.id === 'minecraft:item').forEach(item => item.kill())
+                    })
                 }
             })
         })

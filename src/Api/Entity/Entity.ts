@@ -1,10 +1,10 @@
-import { Player as IPlayer, Block as IBlock, BlockRaycastOptions, CommandResult, Effect, EffectType, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, world, XYRotation } from "mojang-minecraft"
-import { ActionFormData, ActionFormResponse, MessageFormData, MessageFormResponse, ModalFormData, ModalFormResponse } from "mojang-minecraft-ui"
+import { Player as IPlayer, Block as IBlock, BlockRaycastOptions, CommandResult, Effect, EffectType, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, world, XYRotation, BlockLocation } from "mojang-minecraft"
 import { Block } from "../Block/Block.js"
 import { Commands } from "../Commands/index.js"
 import { EntityInventory } from "../Inventory/index.js"
 import { Item } from "../Item/index.js"
 import type { Gamemode, EntityComponents } from "../Types/index.js"
+import { locationFunctions } from "../utils.js"
 import { Dimension } from "../World/index.js"
 
 export class Entity {
@@ -341,6 +341,10 @@ export class Entity {
     setTarget(entity: Entity): void {
         this.entity.target = entity.entity
     }
+    teleport(location: Location | BlockLocation, dimension?: Dimension, xRot?: number, yRot?: number, keepVelocity?: boolean) {
+        //@ts-ignore
+        this.entity.teleport(location instanceof Location ? location : locationFunctions.blockLocationToLocation(location), dimension ?? this.getDimension().dimension, xRot ?? this.getRotation().x, yRot ?? this.getRotation().y, keepVelocity)
+    }
     /**
      * Trigger an entity event
      * @param {string} event Event to trigger
@@ -352,8 +356,10 @@ export class Entity {
 
 export class Player extends Entity {
     protected entity: IPlayer
+    protected readonly _log: PlayerLog
     constructor(player: IPlayer) {
         super(player)
+        this._log = new PlayerLog(player.name)
     }
     /**
      * Add xp points to the player
@@ -431,7 +437,7 @@ export class Player extends Entity {
      * @returns {PlayerLog} The player's log
      */
     getLog(): PlayerLog {
-        return new PlayerLog(this.entity.name)
+        return this._log
     }
     /**
      * Get the player's name
@@ -528,8 +534,8 @@ export class Player extends Entity {
      * Message the player
      * @param {string} msg The message to send to the player
      */
-    message(msg: string): void {
-        this.runCommand(`tellraw @s {"rawtext":[{"text":${JSON.stringify(msg)}}]}`)
+    message(msg: any): void {
+        this.runCommand(`tellraw @s {"rawtext":[{"text":"${(typeof msg === "string" ? msg : typeof msg === "number" ? msg.toString() : JSON.stringify(msg)).replace(/"/g, '\\"')}"}]}`)
     }
     /**
      * Set the player's gamemode
@@ -559,13 +565,13 @@ export class Player extends Entity {
             if (!data) return { error: false, data: this.entity.runCommand(command) }
             data.callback({ player: this, args })
             return { error: false }
-        } catch {
-            return { error: true }
+        } catch (e) {
+            return { error: true, data: e }
         }
     }
 }
 
-class PlayerLog {
+export class PlayerLog {
     protected name: string
     protected _size: number
     constructor(name: string) {
@@ -643,21 +649,7 @@ class PlayerLog {
         return this._size
     }
 }
-
-export const allPlayers = [] as Player[]
 const playerLog: Map<string, Map<any, any>> = new Map()
-
-for (const player of world.getPlayers()) {
-    playerLog.set(player.name, new Map())
-    allPlayers.push(new Player(player))
-}
-
-world.events.playerLeave.subscribe(({ playerName }) => {
-    playerLog.delete(playerName)
-    allPlayers.splice(allPlayers.findIndex(plr => plr.getName() === playerName), 1)
-})
-
-world.events.playerJoin.subscribe(({ player }) => {
-    playerLog.set(player.name, new Map())
-    allPlayers.push(new Player(player))
-})
+world.events.playerJoin.subscribe(({ player }) => playerLog.set(player.name, new Map()))
+world.events.playerLeave.subscribe(({ playerName }) => playerLog.delete(playerName))
+for (const { name } of world.getPlayers()) playerLog.set(name, new Map())

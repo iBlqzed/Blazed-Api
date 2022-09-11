@@ -1,21 +1,6 @@
 import { BlockLocation, Location } from "mojang-minecraft";
 import { Entity } from "./Entity/index";
 /**
- * Delay executing a function
- * @param {() => void} callback Code you want to execute when the delay is finished
- * @param {number} tick Time in ticks until the callback runs
- * @param {boolean} loop Whether or not the code should loop or not
- * @example setTickTimeout(() => {
- * console.warn(`This was called after 20 ticks!`)
- * }, 20)
- */
-export declare function setTickTimeout(callback: () => void, tick: number, loop?: boolean): any;
-/**
- * Clear a tick timeout
- * @param {any} timeout Timeout to clear
- */
-export declare function clearTickTimeout(timeout: any): void;
-/**
  * Broadcast a message
  * @param {string} message Message to broadcast
  * @example broadcastMessage('This message was sent to everyone!')
@@ -70,22 +55,3 @@ export declare function runCommand(cmd: string, executor?: Entity): {
     error: boolean;
     data: any;
 };
-/**
- * Run an array of commands (if a command starts with "%", then it will be conditional!)
- * @param {string[]} commands Commands to run
- * @param {Entity} executor Entity to run all of the commands
- * @returns {{error: boolean}} Whether or not there was an error running all the commands
- * @example runCommands([
- * `testfor @s[hasitem={item=dirt}]`,
- * `%say I have dirt in my hand!`
- * ], player)
- */
-export declare function runCommands(commands: string[], executor?: Entity): {
-    error: boolean;
-};
-/**
- * Wait a certain amount of ticks
- * @param {number} ticks Amount of ticks to wait
- * @returns {Promise<void>} No need to mess with this
- */
-export declare function wait(ticks: number): Promise<void>;

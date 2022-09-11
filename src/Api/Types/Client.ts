@@ -14,4 +14,8 @@ export type ClientOptions = {
          */
         invalidPermissionsError?: string
     }
+    /**
+     * Disable watchdog from crashing your world
+     */
+    watchdog?: boolean
 }

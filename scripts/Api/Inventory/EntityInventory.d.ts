@@ -9,9 +9,9 @@ export declare class EntityInventory {
     protected readonly _entity: Entity;
     protected readonly _inventory: EntityInventoryComponent;
     /**
-     * The id of the inventory (should always be "minecraft:inventory")
+     * The id of the inventory
      */
-    readonly id: string;
+    readonly id: "minecraft:inventory";
     /**
      * The size of the inventory
      */
@@ -38,6 +38,12 @@ export declare class EntityInventory {
      * Amount of empty slots in the entity's inventory
      */
     get emptySlotCount(): number;
+    /**
+     * Loop through all items in the inventory
+     * @param {(item: Item, index: number, array: Item[]) => void} callback Callback to run for each item
+     * @param {any} thisArg The "this" value for the loop
+     */
+    forEach(callback: (item: Item, index: number, array: Item[]) => void, thisArg?: any): void;
     /**
      * Get an item from a slot
      * @param {number} slot Slot to get the item from

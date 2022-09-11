@@ -4,7 +4,7 @@ import { CommandData, CommandInfo } from "../Types/index";
 export declare class Commands {
     static registeredCommands: CommandData[];
     static clients: ClientOptions[];
-    options?: ClientOptions;
+    protected options?: ClientOptions;
     constructor(options?: ClientOptions);
     /**
      * Create a new command

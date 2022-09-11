@@ -1,7 +1,8 @@
-import { MinecraftEffectTypes, world } from "mojang-minecraft";
+import { Location, MinecraftEffectTypes, world } from "mojang-minecraft";
 import { Block } from "../Block/Block.js";
 import { Commands } from "../Commands/index.js";
 import { EntityInventory } from "../Inventory/index.js";
+import { locationFunctions } from "../utils.js";
 import { Dimension } from "../World/index.js";
 export class Entity {
     constructor(entity) {
@@ -338,6 +339,10 @@ export class Entity {
     setTarget(entity) {
         this.entity.target = entity.entity;
     }
+    teleport(location, dimension, xRot, yRot, keepVelocity) {
+        //@ts-ignore
+        this.entity.teleport(location instanceof Location ? location : locationFunctions.blockLocationToLocation(location), dimension ?? this.getDimension().dimension, xRot ?? this.getRotation().x, yRot ?? this.getRotation().y, keepVelocity);
+    }
     /**
      * Trigger an entity event
      * @param {string} event Event to trigger
@@ -349,6 +354,7 @@ export class Entity {
 export class Player extends Entity {
     constructor(player) {
         super(player);
+        this._log = new PlayerLog(player.name);
     }
     /**
      * Add xp points to the player
@@ -431,7 +437,7 @@ export class Player extends Entity {
      * @returns {PlayerLog} The player's log
      */
     getLog() {
-        return new PlayerLog(this.entity.name);
+        return this._log;
     }
     /**
      * Get the player's name
@@ -529,7 +535,7 @@ export class Player extends Entity {
      * @param {string} msg The message to send to the player
      */
     message(msg) {
-        this.runCommand(`tellraw @s {"rawtext":[{"text":${JSON.stringify(msg)}}]}`);
+        this.runCommand(`tellraw @s {"rawtext":[{"text":"${(typeof msg === "string" ? msg : typeof msg === "number" ? msg.toString() : JSON.stringify(msg)).replace(/"/g, '\\"')}"}]}`);
     }
     /**
      * Set the player's gamemode
@@ -563,12 +569,12 @@ export class Player extends Entity {
             data.callback({ player: this, args });
             return { error: false };
         }
-        catch {
-            return { error: true };
+        catch (e) {
+            return { error: true, data: e };
         }
     }
 }
-class PlayerLog {
+export class PlayerLog {
     constructor(name) {
         this.name = name;
         this._size = 0;
@@ -644,17 +650,8 @@ class PlayerLog {
         return this._size;
     }
 }
-export const allPlayers = [];
 const playerLog = new Map();
-for (const player of world.getPlayers()) {
-    playerLog.set(player.name, new Map());
-    allPlayers.push(new Player(player));
-}
-world.events.playerLeave.subscribe(({ playerName }) => {
-    playerLog.delete(playerName);
-    allPlayers.splice(allPlayers.findIndex(plr => plr.getName() === playerName), 1);
-});
-world.events.playerJoin.subscribe(({ player }) => {
-    playerLog.set(player.name, new Map());
-    allPlayers.push(new Player(player));
-});
+world.events.playerJoin.subscribe(({ player }) => playerLog.set(player.name, new Map()));
+world.events.playerLeave.subscribe(({ playerName }) => playerLog.delete(playerName));
+for (const { name } of world.getPlayers())
+    playerLog.set(name, new Map());

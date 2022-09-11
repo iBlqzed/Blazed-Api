@@ -5,7 +5,7 @@ import { CommandData, CommandInfo } from "../Types/index";
 export class Commands {
     static registeredCommands: CommandData[] = []
     static clients = [] as ClientOptions[]
-    options?: ClientOptions
+    protected options?: ClientOptions
     constructor(options?: ClientOptions) {
         this.options = options
         if (options?.command?.enabled) {
@@ -25,7 +25,7 @@ export class Commands {
             name: info.name.toLowerCase().split(' ')[0],
             description: info.description ?? undefined,
             aliases: info.aliases?.map(aL => aL.toLowerCase().split(' ')[0]) ?? [],
-            permissions: info.permissions ?? [],
+            permission: info.permission,
             prefix: this.options.command.prefix,
             callback
         })

@@ -74,7 +74,7 @@ export class Block {
      * @returns {boolean} Whether or not the block is empty
      */
     isEmpty() {
-        return this.block.isEmpty;
+        return this.block.id === "minecraft:air";
     }
     /**
      * Test for whether or not the block is waterlogged

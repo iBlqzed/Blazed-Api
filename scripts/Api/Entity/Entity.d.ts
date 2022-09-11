@@ -1,4 +1,4 @@
-import { Player as IPlayer, BlockRaycastOptions, CommandResult, Effect, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, XYRotation } from "mojang-minecraft";
+import { Player as IPlayer, BlockRaycastOptions, CommandResult, Effect, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, XYRotation, BlockLocation } from "mojang-minecraft";
 import { Block } from "../Block/Block.js";
 import { EntityInventory } from "../Inventory/index.js";
 import { Item } from "../Item/index.js";
@@ -243,6 +243,7 @@ export declare class Entity {
      * @param {Entity} entity The entity to be the new entity's target
      */
     setTarget(entity: Entity): void;
+    teleport(location: Location | BlockLocation, dimension?: Dimension, xRot?: number, yRot?: number, keepVelocity?: boolean): void;
     /**
      * Trigger an entity event
      * @param {string} event Event to trigger
@@ -251,6 +252,7 @@ export declare class Entity {
 }
 export declare class Player extends Entity {
     protected entity: IPlayer;
+    protected readonly _log: PlayerLog;
     constructor(player: IPlayer);
     /**
      * Add xp points to the player
@@ -371,7 +373,7 @@ export declare class Player extends Entity {
      * Message the player
      * @param {string} msg The message to send to the player
      */
-    message(msg: string): void;
+    message(msg: any): void;
     /**
      * Set the player's gamemode
      * @param {Gamemode} gamemode The gamemode to set the player too
@@ -392,7 +394,7 @@ export declare class Player extends Entity {
         data?: any;
     };
 }
-declare class PlayerLog {
+export declare class PlayerLog {
     protected name: string;
     protected _size: number;
     constructor(name: string);
@@ -445,5 +447,3 @@ declare class PlayerLog {
      */
     getSize(): number;
 }
-export declare const allPlayers: Player[];
-export {};

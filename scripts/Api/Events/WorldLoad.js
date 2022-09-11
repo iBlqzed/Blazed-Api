@@ -1,4 +1,5 @@
 import { world } from "mojang-minecraft";
+import { runCommand } from "../utils";
 import { World } from "../World/index.js";
 export class WorldLoad {
     constructor() {
@@ -12,12 +13,10 @@ export class WorldLoad {
      */
     on(callback) {
         this.arg = world.events.tick.subscribe(() => {
-            try {
-                world.getDimension('overworld').runCommand(`testfor @a`);
-                callback(new World());
-                world.events.tick.unsubscribe(this.arg);
-            }
-            catch { }
+            if (runCommand(`testfor @a`).error)
+                return;
+            callback(new World());
+            world.events.tick.unsubscribe(this.arg);
         });
         return this;
     }
@@ -26,7 +25,7 @@ export class WorldLoad {
      */
     off() {
         try {
-            world.events.entityHit.unsubscribe(this.arg);
+            world.events.tick.unsubscribe(this.arg);
         }
         catch { }
     }

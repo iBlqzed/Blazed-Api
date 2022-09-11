@@ -1,6 +1,6 @@
 import type { Block, BlockInventoryComponent } from "mojang-minecraft";
 import { Item } from "../Item/Item.js";
-import { EntityInventory } from "./EntityInventory";
+import type { EntityInventory } from "./EntityInventory";
 
 /**
  * An entity's inventory
@@ -33,6 +33,14 @@ export class BlockInventory {
      */
     get emptySlotCount(): number {
         return this._inventory.container.emptySlotsCount
+    }
+    /**
+     * Loop through all items in the inventory
+     * @param {(item: Item, index: number, array: Item[]) => void} callback Callback to run for each item
+     * @param {any} thisArg The "this" value for the loop
+     */
+    forEach(callback: (item: Item, index: number, array: Item[]) => void, thisArg?: any): void {
+        new Array(this.size).fill(undefined).map((_, i) => this.getItem(i)).forEach(callback, thisArg)
     }
     /**
      * Get an item from a slot

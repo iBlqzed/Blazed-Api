@@ -7,7 +7,7 @@ export class EntityInventory {
         const inventory = entity.getComponent('inventory');
         this._entity = entity;
         this._inventory = inventory;
-        this.id = inventory.id;
+        this.id = "minecraft:inventory";
         this.size = inventory.inventorySize;
         this.containerType = inventory.containerType;
         this.private = inventory.private;
@@ -28,6 +28,14 @@ export class EntityInventory {
      */
     get emptySlotCount() {
         return this._inventory.container.emptySlotsCount;
+    }
+    /**
+     * Loop through all items in the inventory
+     * @param {(item: Item, index: number, array: Item[]) => void} callback Callback to run for each item
+     * @param {any} thisArg The "this" value for the loop
+     */
+    forEach(callback, thisArg) {
+        new Array(this.size).fill(undefined).map((_, i) => this.getItem(i)).forEach(callback, thisArg);
     }
     /**
      * Get an item from a slot

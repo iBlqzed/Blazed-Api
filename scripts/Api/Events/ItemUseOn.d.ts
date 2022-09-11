@@ -13,3 +13,8 @@ export declare class ItemUseOn {
      */
     off(): void;
 }
+/**
+const oldLog = log[(data.source as IPlayer).name] ?? Date.now() - 102
+log[(data.source as IPlayer).nam[e] = Date.now()
+if ((oldLog + 100) < Date.now())]
+ */ 

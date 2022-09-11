@@ -6,8 +6,10 @@ import { EntityEvent } from './EntityEvent';
 import { EntityHit } from './EntityHit';
 import { ItemUse } from './ItemUse';
 import { ItemUseOn } from './ItemUseOn';
+import { PlayerDeath } from './PlayerDeath';
 import { PlayerJoin } from './PlayerJoin';
 import { PlayerLeave } from './PlayerLeave';
+import { ProjectileHit } from './ProjectileHit';
 import { Tick } from './Tick';
 import { WorldLoad } from './WorldLoad';
 export declare const events: {
@@ -19,8 +21,10 @@ export declare const events: {
     EntityHit: typeof EntityHit;
     ItemUse: typeof ItemUse;
     ItemUseOn: typeof ItemUseOn;
+    PlayerDeath: typeof PlayerDeath;
     PlayerJoin: typeof PlayerJoin;
     PlayerLeave: typeof PlayerLeave;
+    ProjectileHit: typeof ProjectileHit;
     Tick: typeof Tick;
     WorldLoad: typeof WorldLoad;
 };

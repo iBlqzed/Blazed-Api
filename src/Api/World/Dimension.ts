@@ -67,23 +67,15 @@ export class Dimension {
         return this.dimension.getEntitiesFromRay(location instanceof Location ? location : locationFunctions.blockLocationToLocation(location), direction, options).map(eN => new Entity(eN))
     }
     /**
-     * Whether or not a block is air or not
-     * @param {Location | BlockLocation} location Location to test with
-     * @returns {boolean} Whether or not that location is empty (air)
-     */
-    isEmpty(location: Location | BlockLocation): boolean {
-        return this.dimension.isEmpty(location instanceof BlockLocation ? location : locationFunctions.locationToBlockLocation(location))
-    }
-    /**
      * Run a command
      * @param {string} command Command to run
      * @returns {any} Command data + error
      */
-    runCommand(command: string): any {
+    runCommand(command: string): { error: boolean, data: any } {
         try {
-            return { error: false, ...this.dimension.runCommand(command) };
-        } catch {
-            return { error: true };
+            return { error: false, data: this.dimension.runCommand(command) };
+        } catch (e) {
+            return { error: true, data: e };
         }
     }
     /**

@@ -1,6 +1,6 @@
-import type { BlockPermutation, DefinitionModifier } from "mojang-minecraft"
+import type { BlockPermutation, DefinitionModifier, Direction, Location, Vector } from "mojang-minecraft"
 import type { Block } from "../Block/index.js"
-import type { Player, Entity } from "../Entity/index.js"
+import type { Player, Entity, PlayerLog } from "../Entity/index.js"
 import type { Item } from "../Item/index.js"
 import type { World } from "../World/index.js"
 
@@ -45,7 +45,7 @@ export type Events = {
     }
     Chat: {
         /**
-         * The player that chatted
+         * The player who sent the message
          */
         player: Player,
         /**
@@ -118,17 +118,72 @@ export type Events = {
         cancel(): void
     }
     /**
+     * The player that died
+     */
+    PlayerDeath: Player
+    /**
      * The player that joined
      */
     PlayerJoin: Player
+    PlayerLeave: {
+        /**
+         * The name of the player who left
+         */
+        playerName: string
+        /**
+         * The log of the player who left
+         */
+        log: PlayerLog
+    }
+    ProjectileHit: {
+        /**
+         * The entity that shot the projectile
+         */
+        entity: Entity,
+        /**
+         * The entity that was hit
+         * @remarks There could be no hitEntity
+         */
+        hitEntity?: Entity,
+        /**
+         * Details relating to the block that was hit
+         * @remarks There could be no hitBlock
+         */
+        hitBlock?: {
+            /**
+             * The block that was hit
+             */
+            block: Block,
+            /**
+             * The face of the block that was hit
+             */
+            face: Direction,
+            /**
+             * The X location of where the projectile hit on the face of the block
+             */
+            faceLocationX: number
+            /**
+             * The Y location of where the projectile hit on the face of the block
+             */
+            faceLocationY: number,
+        },
+        /**
+         * The projectile that was shot
+         */
+        projectile: Entity,
+        /**
+         * The hit vector
+         */
+        hitVector: Vector,
+        /**
+         * The location of the projectile
+         */
+        location: Location
+    }
     /**
-     * The name of the player who left
+     * The current tick (kinda like Date.now() but ticks)
      */
-    PlayerLeave: string
-    /**
-     * Runs every tick
-     */
-    Tick: void
+    Tick: number
     /**
      * The loaded world
      */
