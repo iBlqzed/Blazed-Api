@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 import { Block } from "../Block/index.js";
 import { Player } from "../Entity/index.js";
 export class BlockPlace {

@@ -1,4 +1,4 @@
-import type { BlockPermutation, DefinitionModifier, Direction, Location, Vector } from "mojang-minecraft";
+import type { BlockPermutation, DefinitionModifier, Direction, Location, Vector } from "@minecraft/server";
 import type { Block } from "../Block/index.js";
 import type { Player, Entity, PlayerLog } from "../Entity/index.js";
 import type { Item } from "../Item/index.js";

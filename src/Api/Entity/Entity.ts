@@ -1,4 +1,4 @@
-import { Player as IPlayer, Block as IBlock, BlockRaycastOptions, CommandResult, Effect, EffectType, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, world, XYRotation, BlockLocation } from "mojang-minecraft"
+import { Player as IPlayer, Block as IBlock, BlockRaycastOptions, CommandResult, Effect, EffectType, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, world, XYRotation, BlockLocation, GameMode } from "@minecraft/server"
 import { Block } from "../Block/Block.js"
 import { Commands } from "../Commands/index.js"
 import { EntityInventory } from "../Inventory/index.js"
@@ -31,7 +31,7 @@ export class Entity {
      * @param {number} score Amount to add to the objective
      */
     addScore(objective: string, score: number): void {
-        this.runCommand(`scoreboard players add @s "${objective}" ${score}`)
+        this.runCommandAsync(`scoreboard players add @s "${objective}" ${score}`)
     }
     /**
      * Add a tag to the entity
@@ -126,7 +126,7 @@ export class Entity {
      * @returns {string} The entity's id
      */
     getId(): string {
-        return this.entity.id
+        return this.entity.typeId
     }
     /**
      * Get the IEntity
@@ -203,6 +203,14 @@ export class Entity {
         return new Entity(this.entity.target)
     }
     /**
+     * Get the entity's unique id
+     * @remarks This is different for every single entity
+     * @returns {string} The entity's unique id
+     */
+    getUniqueId(): string {
+        return this.entity.id
+    }
+    /**
      * Get the entity's velocity
      * @returns {Vector} The entity's velocity
      */
@@ -259,7 +267,7 @@ export class Entity {
      * @param {number} score Amount to remove from the objective
      */
     removeScore(objective: string, score: number): void {
-        this.runCommand(`scoreboard players remove @s "${objective}" ${score}`)
+        this.runCommandAsync(`scoreboard players remove @s "${objective}" ${score}`)
     }
     /**
      * Remove a tag from the entity
@@ -277,8 +285,8 @@ export class Entity {
     runCommand(command: string): { error: boolean, data?: any } {
         try {
             return { error: false, data: this.entity.runCommand(command) }
-        } catch {
-            return { error: true };
+        } catch (d) {
+            return { error: true, data: d };
         }
     }
     /**
@@ -325,7 +333,7 @@ export class Entity {
      * @param {number} score Amount to set for the objective
      */
     setScore(objective: string, score: number): void {
-        this.runCommand(`scoreboard players set @s "${objective}" ${score}`)
+        this.runCommandAsync(`scoreboard players set @s "${objective}" ${score}`)
     }
     /**
      * Set the velocity of the entity
@@ -333,13 +341,6 @@ export class Entity {
      */
     setVelocity(velocity: Vector): void {
         this.entity.setVelocity(velocity)
-    }
-    /**
-     * Set the entity's target
-     * @param {Entity} entity The entity to be the new entity's target
-     */
-    setTarget(entity: Entity): void {
-        this.entity.target = entity.entity
     }
     teleport(location: Location | BlockLocation, dimension?: Dimension, xRot?: number, yRot?: number, keepVelocity?: boolean) {
         //@ts-ignore
@@ -367,7 +368,7 @@ export class Player extends Entity {
      */
     addXpPoints(amount: number): void {
         if (!Number.isSafeInteger(amount)) return
-        this.runCommand(`/xp ${amount} @s`)
+        this.runCommandAsync(`xp ${amount} @s`)
     }
     /**
      * Add xp levels to the player
@@ -375,33 +376,31 @@ export class Player extends Entity {
      */
     addXpLevels(amount: number): void {
         if (!Number.isSafeInteger(amount)) return
-        this.runCommand(`/xp ${amount}L @s`)
+        this.runCommandAsync(`xp ${amount}L @s`)
     }
     /**
      * Clear the player's spawn point
      */
     clearRespawnPoint(): void {
-        this.runCommand(`/clearspawnpoint @s`)
+        this.runCommandAsync(`clearspawnpoint @s`)
     }
     /**
      * Clear the player's title
      * @remarks Only clears title and subtitle, not actionbar
      */
     clearTitle(): void {
-        this.runCommand(`/title @s clear`)
+        this.runCommandAsync(`/title @s clear`)
     }
     /**
      * Get the player's gamemode
      * @returns {Gamemode} The player's gamemode
      */
     getGamemode(): Gamemode {
-        const survivalTest = this.runCommand(`testfor @s[m=0]`).error
-        if (!survivalTest) return 'survival'
-        const creativeTest = this.runCommand(`testfor @s[m=1]`).error
-        if (!creativeTest) return 'creative'
-        const adventureTest = this.runCommand(`testfor @s[m=2]`).error
-        if (!adventureTest) return 'adventure'
-        return 'unknown'
+        if ([...world.getPlayers({ gameMode: GameMode.survival })].map(e => e.name).includes(this.entity.name)) return "survival"
+        if ([...world.getPlayers({ gameMode: GameMode.creative })].map(e => e.name).includes(this.entity.name)) return "creative"
+        if ([...world.getPlayers({ gameMode: GameMode.adventure })].map(e => e.name).includes(this.entity.name)) return "adventure"
+        if ([...world.getPlayers({ gameMode: GameMode.spectator })].map(e => e.name).includes(this.entity.name)) return "spectator"
+        return "unknown"
     }
     /**
      * Get the item the player is holding
@@ -415,7 +414,7 @@ export class Player extends Entity {
      * @returns {"minecraft:player"} The player's id
      */
     getId(): "minecraft:player" {
-        return this.entity.id as "minecraft:player"
+        return this.entity.typeId as "minecraft:player"
     }
     /**
      * Get the IPlayer
@@ -528,21 +527,21 @@ export class Player extends Entity {
      * @param {string} reason The reason they got kicked
      */
     kick(reason?: string) {
-        this.entity.runCommand(`kick "${this.entity.name}" ${reason ?? ''}`)
+        this.runCommandAsync(`kick "${this.entity.name}" ${reason ?? ''}`)
     }
     /**
      * Message the player
-     * @param {string} msg The message to send to the player
+     * @param {any} msg The message to send to the player
      */
     message(msg: any): void {
-        this.runCommand(`tellraw @s {"rawtext":[{"text":"${(typeof msg === "string" ? msg : typeof msg === "number" ? msg.toString() : JSON.stringify(msg)).replace(/"/g, '\\"')}"}]}`)
+        this.entity.tell(typeof msg === "string" ? msg : typeof msg === "number" || typeof msg === "bigint" || typeof msg === "boolean" || typeof msg === "symbol" ? msg.toString() : JSON.stringify(msg))
     }
     /**
      * Set the player's gamemode
      * @param {Gamemode} gamemode The gamemode to set the player too
      */
     setGamemode(gamemode: Gamemode) {
-        if (gamemode !== 'unknown') this.runCommand(`gamemode ${gamemode} @s`)
+        if (gamemode !== 'unknown') this.runCommandAsync(`gamemode ${gamemode} @s`)
     }
     /**
      * Set the item the player is holding
@@ -555,6 +554,7 @@ export class Player extends Entity {
      * Make the player run a command
      * @param {string} command Command to run (includes custom commands)
      * @returns {any} Command data + error
+     * @deprecated Soon to no longer work, try runCommandAsync
      */
     runCommand(command: string): { error: boolean, data?: any } {
         try {

@@ -1,4 +1,4 @@
-import { TickEvent } from "mojang-minecraft";
+import { TickEvent } from "@minecraft/server";
 export declare class TickTimeout {
     protected event: (arg: TickEvent) => void;
     protected ticks: number;

@@ -1,4 +1,4 @@
-import { Enchantment, ItemStack, MinecraftEnchantmentTypes } from "mojang-minecraft";
+import { Enchantment, ItemStack, MinecraftEnchantmentTypes } from "@minecraft/server";
 import { Entity } from "../Entity/index.js";
 import { ItemComponents } from "../Types/index";
 export declare class Item {

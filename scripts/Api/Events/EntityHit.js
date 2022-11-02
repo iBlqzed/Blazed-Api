@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 import { Player, Entity } from "../Entity/index";
 export class EntityHit {
     constructor() {
@@ -14,8 +14,8 @@ export class EntityHit {
         this.arg = world.events.entityHit.subscribe(data => {
             if (data.hitEntity)
                 callback({
-                    entity: data.entity.id === 'minecraft:player' ? new Player(data.entity) : new Entity(data.entity),
-                    hitEntity: data.hitEntity.id === 'minecraft:player' ? new Player(data.hitEntity) : new Entity(data.hitEntity)
+                    entity: data.entity.typeId === 'minecraft:player' ? new Player(data.entity) : new Entity(data.entity),
+                    hitEntity: data.hitEntity.typeId === 'minecraft:player' ? new Player(data.hitEntity) : new Entity(data.hitEntity)
                 });
         });
         return this;

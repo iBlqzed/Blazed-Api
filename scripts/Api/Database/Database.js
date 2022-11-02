@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 const names = [];
 /**
  * Database
@@ -101,17 +101,6 @@ export class Database {
         yield* this.data.entries();
     }
 }
-/**
- * Run a command!
- * @param {string} cmd Command to run
- * @returns {{ error: boolean, data: any }} Whether or not the command errors, and command data
- * @example runCommand(`give @a diamond`)
- */
 function runCommand(cmd) {
-    try {
-        return { error: false, data: world.getDimension('overworld').runCommand(cmd) };
-    }
-    catch {
-        return { error: true, data: undefined };
-    }
+    return world.getDimension('overworld').runCommandAsync(cmd);
 }

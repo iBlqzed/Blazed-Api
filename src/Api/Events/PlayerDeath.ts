@@ -1,4 +1,4 @@
-import { EntityHealthComponent, world } from "mojang-minecraft"
+import { EntityHealthComponent, world } from "@minecraft/server"
 import { Player } from "../Entity/index.js"
 import { Events } from "../Types/index.js"
 

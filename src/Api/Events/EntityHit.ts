@@ -1,4 +1,4 @@
-import { world, Player as IPlayer } from "mojang-minecraft"
+import { world, Player as IPlayer } from "@minecraft/server"
 import { Player, Entity } from "../Entity/index"
 import { Events } from "../Types/index"
 
@@ -13,8 +13,8 @@ export class EntityHit {
     on(callback: (data: Events['EntityHit']) => void): EntityHit {
         this.arg = world.events.entityHit.subscribe(data => {
             if (data.hitEntity) callback({
-                entity: data.entity.id === 'minecraft:player' ? new Player(data.entity as IPlayer) : new Entity(data.entity),
-                hitEntity: data.hitEntity.id === 'minecraft:player' ? new Player(data.hitEntity as IPlayer) : new Entity(data.hitEntity)
+                entity: data.entity.typeId === 'minecraft:player' ? new Player(data.entity as IPlayer) : new Entity(data.entity),
+                hitEntity: data.hitEntity.typeId === 'minecraft:player' ? new Player(data.hitEntity as IPlayer) : new Entity(data.hitEntity)
             })
         })
         return this

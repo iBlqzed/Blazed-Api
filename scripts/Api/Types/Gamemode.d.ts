@@ -1,1 +1,1 @@
-export declare type Gamemode = 'survival' | 'creative' | 'adventure' | 'unknown';
+export declare type Gamemode = 'survival' | 'creative' | 'adventure' | "spectator" | 'unknown';

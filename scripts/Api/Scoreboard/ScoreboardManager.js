@@ -1,5 +1,4 @@
-import { world } from 'mojang-minecraft';
-import { runCommand } from '../utils.js';
+import { world } from '@minecraft/server';
 import { Scoreboard } from './Scoreboard.js';
 export class ScoreboardManager {
     /**
@@ -8,7 +7,7 @@ export class ScoreboardManager {
      * @param {string} display The display of the objective
      */
     addObjective(objective, display) {
-        runCommand(`scoreboard objectives add ${objective} dummy${display ? ` ${display}` : ''}`);
+        world.scoreboard.addObjective(objective, display ?? '');
     }
     /**
      * Get a scoreboard objective
@@ -39,6 +38,6 @@ export class ScoreboardManager {
      * @param {string} objective Objective to remove
      */
     removeObjective(objective) {
-        runCommand(`scoreboard objectives remove ${objective}`);
+        world.scoreboard.removeObjective(objective);
     }
 }

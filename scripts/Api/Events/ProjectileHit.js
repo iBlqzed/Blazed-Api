@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 import { Block } from "../Block/index";
 import { Player, Entity } from "../Entity/index";
 export class ProjectileHit {
@@ -16,8 +16,8 @@ export class ProjectileHit {
             const e = world.events.tick.subscribe(() => {
                 world.events.tick.unsubscribe(e);
                 callback({
-                    entity: source.id === 'minecraft:player' ? new Player(source) : new Entity(source),
-                    hitEntity: entityHit?.entity ? entityHit.entity.id === 'minecraft:player' ? new Player(entityHit.entity) : new Entity(entityHit.entity) : undefined,
+                    entity: source.typeId === 'minecraft:player' ? new Player(source) : new Entity(source),
+                    hitEntity: entityHit?.entity ? entityHit.entity.typeId === 'minecraft:player' ? new Player(entityHit.entity) : new Entity(entityHit.entity) : undefined,
                     hitBlock: blockHit?.block ? {
                         block: new Block(blockHit.block),
                         face: blockHit.face,

@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft"
+import { world } from "@minecraft/server"
 import { Commands } from "../Commands/index"
 import { Player } from "../Entity/index"
 import { Events } from "../Types/index"

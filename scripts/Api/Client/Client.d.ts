@@ -1,3 +1,4 @@
+import { CommandResult } from "@minecraft/server";
 import { Commands } from "../Commands/index.js";
 import { DatabaseUtils } from "../Database/index.js";
 import { ScoreboardManager } from "../Scoreboard/index.js";
@@ -51,11 +52,18 @@ export declare class Client {
      * Run a command
      * @param {string} cmd Command to run
      * @returns {{error: boolean, data: any}} Command error + data
+     * @deprecated Please try runCommandAsync, this is soon to no longer work
      */
     runCommand(cmd: string): {
         error: boolean;
         data: any;
     };
+    /**
+     * Run an async command
+     * @param {string} cmd Command to run
+     * @returns {Promise<CommandResult>} Command result
+     */
+    runCommandAsync(cmd: string): Promise<CommandResult>;
     /**
      * Run an array of command
      * @param {string[]} cmds Commands to run

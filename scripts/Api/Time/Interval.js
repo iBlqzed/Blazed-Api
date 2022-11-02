@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 export class TickInterval {
     /**
      * Delay running a function repeatidly

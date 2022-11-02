@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 import { Block } from "../Block/index.js";
 import { Player, Entity } from "../Entity/index.js";
 import { Item } from "../Item/index.js";
@@ -15,7 +15,7 @@ export class ItemUseOn {
     on(callback) {
         this.arg = world.events.beforeItemUseOn.subscribe(data => {
             callback({
-                entity: data.source.id === "minecraft:player" ? new Player(data.source) : new Entity(data.source),
+                entity: data.source.typeId === "minecraft:player" ? new Player(data.source) : new Entity(data.source),
                 item: new Item(data.item),
                 block: new Block(data.source.dimension.getBlock(data.blockLocation)),
                 cancel() {

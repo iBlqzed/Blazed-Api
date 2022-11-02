@@ -1,5 +1,5 @@
 import { Player } from "../Entity/index.js";
-import { ModalFormData, ModalFormResponse } from "mojang-minecraft-ui";
+import { ModalFormData, ModalFormResponse } from "@minecraft/server-ui";
 /**
  * Create a new ModalForm
  */
@@ -25,13 +25,6 @@ export declare class ModalForm {
      * @example .addDropdown('My dropdown', ['Option 1', 'Option 2'], 0)
      */
     addDropdown(label: string, options: string[], defaultIndex?: number): ModalForm;
-    /**
-     * Add an icon to the form
-     * @param {string} iconPath The icon path
-     * @returns {ModalForm} The modal form
-     * @example .addIcon('textures/items/diamond_sword.png')
-     */
-    addIcon(iconPath: string): ModalForm;
     /**
      * Add a slider to the form
      * @param {string} label The label for the slider

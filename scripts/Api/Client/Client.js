@@ -1,4 +1,4 @@
-import { system, world } from "mojang-minecraft";
+import { system, world } from "@minecraft/server";
 import { Commands } from "../Commands/index.js";
 import { DatabaseUtils } from "../Database/index.js";
 import { events } from '../Events/index.js';
@@ -68,6 +68,7 @@ export class Client {
      * Run a command
      * @param {string} cmd Command to run
      * @returns {{error: boolean, data: any}} Command error + data
+     * @deprecated Please try runCommandAsync, this is soon to no longer work
      */
     runCommand(cmd) {
         try {
@@ -78,18 +79,19 @@ export class Client {
         }
     }
     /**
+     * Run an async command
+     * @param {string} cmd Command to run
+     * @returns {Promise<CommandResult>} Command result
+     */
+    runCommandAsync(cmd) {
+        return world.getDimension('overworld').runCommandAsync(cmd);
+    }
+    /**
      * Run an array of command
      * @param {string[]} cmds Commands to run
      */
     runCommands(cmds) {
-        const cR = /^%/;
-        if (cR.test(cmds[0]))
-            throw new TypeError('[Server] >> First command in runCommands function can not be conditional');
-        let cE = false;
-        for (const cM of cmds) {
-            if (cE && cR.test(cM))
-                continue;
-            cE = this.runCommand(cM.replace(cR, '')).error;
-        }
+        for (const cM of cmds)
+            this.runCommandAsync(cM);
     }
 }

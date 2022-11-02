@@ -1,6 +1,5 @@
-import { world } from "mojang-minecraft"
+import { system, world } from "@minecraft/server"
 import { Events } from "../Types/index"
-import { runCommand } from "../utils"
 import { World } from "../World/index.js"
 
 export class WorldLoad {
@@ -12,10 +11,9 @@ export class WorldLoad {
      * Add a listener for the event
      */
     on(callback: (data: Events['WorldLoad']) => void): WorldLoad {
-        this.arg = world.events.tick.subscribe(() => {
-            if (runCommand(`testfor @a`).error) return
-            callback(new World())
-            world.events.tick.unsubscribe(this.arg)
+        this.arg = true
+        system.run(() => {
+            if (this.arg) callback(new World())
         })
         return this
     }
@@ -23,6 +21,6 @@ export class WorldLoad {
      * Remove the listener for the event
      */
     off(): void {
-        try { world.events.tick.unsubscribe(this.arg) } catch { }
+        this.arg = false
     }
 }

@@ -1,4 +1,4 @@
-import { ModalFormData } from "mojang-minecraft-ui";
+import { ModalFormData } from "@minecraft/server-ui";
 /**
  * Create a new ModalForm
  */
@@ -26,16 +26,6 @@ export class ModalForm {
      */
     addDropdown(label, options, defaultIndex) {
         this.form.dropdown(label, options, defaultIndex);
-        return this;
-    }
-    /**
-     * Add an icon to the form
-     * @param {string} iconPath The icon path
-     * @returns {ModalForm} The modal form
-     * @example .addIcon('textures/items/diamond_sword.png')
-     */
-    addIcon(iconPath) {
-        this.form.icon(iconPath);
         return this;
     }
     /**

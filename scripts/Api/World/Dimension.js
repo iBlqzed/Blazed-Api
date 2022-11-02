@@ -1,4 +1,4 @@
-import { BlockLocation, Location } from "mojang-minecraft";
+import { BlockLocation, Location } from "@minecraft/server";
 import { Block } from "../Block/index.js";
 import { Entity, Player } from "../Entity/index";
 import { locationFunctions } from "../utils";
@@ -40,7 +40,7 @@ export class Dimension {
      * @returns {Entity[]} All entities in the dimension
      */
     getEntities(options) {
-        return Array.from(this.dimension.getEntities(options), (eN) => eN.id !== "minecraft:player" ? new Entity(eN) : new Player(eN));
+        return Array.from(this.dimension.getEntities(options), (eN) => eN.typeId !== "minecraft:player" ? new Entity(eN) : new Player(eN));
     }
     /**
      * Get all entities at a location

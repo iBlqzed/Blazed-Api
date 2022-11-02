@@ -1,4 +1,4 @@
-import { MessageFormData, MessageFormResponse } from "mojang-minecraft-ui";
+import { MessageFormData, MessageFormResponse } from "@minecraft/server-ui";
 import { Player } from "../Entity/index.js";
 /**
  * Create a new MessageForm

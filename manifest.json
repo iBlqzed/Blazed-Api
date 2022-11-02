@@ -1,8 +1,8 @@
 {
     "format_version": 2,
     "header": {
-        "name": "Api Test",
-        "description": "Api testing\nMade by: iBlqzed",
+        "name": "Blazed Api",
+        "description": "Blazed Api\nMade by: iBlqzed",
         "uuid": "cdba0ab9-b1ff-414d-a634-b2de218569b5",
         "version": [
             1,
@@ -39,15 +39,15 @@
     ],
     "dependencies": [
         {
-            "uuid": "6f4b6893-1bb6-42fd-b458-7fa3d0c89616",
+            "module_name": "@minecraft/server",
             "version": "1.0.0-beta"
         },
         {
-            "uuid": "b26a4d4c-afdf-4690-88f8-931846312678",
+            "module_name": "@minecraft/server-gametest",
             "version": "1.0.0-beta"
         },
         {
-            "uuid": "2bd50a27-ab5f-4f40-a596-3641627c635e",
+            "module_name": "@minecraft/server-ui",
             "version": "1.0.0-beta"
         }
     ],
@@ -56,5 +56,8 @@
             "iBlqzed"
         ],
         "url": "https://github.com/iBlqzed/Blazed-Api"
-    }
+    },
+    "capabilities": [
+        "script_eval"
+    ]
 }

@@ -1,4 +1,4 @@
-import type { EntityInventoryComponent } from "mojang-minecraft";
+import type { EntityInventoryComponent } from "@minecraft/server";
 import { Entity } from "../Entity/index.js";
 import { Item } from "../Item/index.js";
 import { BlockInventory } from "./BlockInventory";

@@ -1,4 +1,4 @@
-import { Enchantment, Items, ItemStack, MinecraftEnchantmentTypes } from "mojang-minecraft";
+import { Enchantment, Items, ItemStack, MinecraftEnchantmentTypes } from "@minecraft/server";
 export class Item {
     /**
      * Create a new item class with an item stack or item id
@@ -98,7 +98,7 @@ export class Item {
      * @returns {string} The item's id
      */
     getId() {
-        return this.itemStack.id;
+        return this.itemStack.typeId;
     }
     /**
      * Get the item stack

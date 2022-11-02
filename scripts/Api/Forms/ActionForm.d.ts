@@ -1,4 +1,4 @@
-import { ActionFormData, ActionFormResponse } from "mojang-minecraft-ui";
+import { ActionFormData, ActionFormResponse } from "@minecraft/server-ui";
 import { Player } from "../Entity/index.js";
 /**
  * Create a new ActionForm

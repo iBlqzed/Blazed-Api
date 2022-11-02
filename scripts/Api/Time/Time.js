@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 import { TickInterval } from "./Interval";
 import { TickTimeout } from "./Timeout";
 export class Time {

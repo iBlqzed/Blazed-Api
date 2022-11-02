@@ -1,4 +1,4 @@
-import { ActionFormData } from "mojang-minecraft-ui";
+import { ActionFormData } from "@minecraft/server-ui";
 /**
  * Create a new ActionForm
  */

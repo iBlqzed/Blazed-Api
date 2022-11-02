@@ -1,4 +1,4 @@
-import { world, Player as IPlayer } from "mojang-minecraft"
+import { world, Player as IPlayer } from "@minecraft/server"
 import { Block } from "../Block/index.js"
 import { Player, Entity } from "../Entity/index.js"
 import { Item } from "../Item/index.js"
@@ -15,7 +15,7 @@ export class ItemUseOn {
     on(callback: (data: Events['ItemUseOn']) => void): ItemUseOn {
         this.arg = world.events.beforeItemUseOn.subscribe(data => {
             callback({
-                entity: data.source.id === "minecraft:player" ? new Player(data.source as IPlayer) : new Entity(data.source),
+                entity: data.source.typeId === "minecraft:player" ? new Player(data.source as IPlayer) : new Entity(data.source),
                 item: new Item(data.item),
                 block: new Block(data.source.dimension.getBlock(data.blockLocation)),
                 cancel(): void {

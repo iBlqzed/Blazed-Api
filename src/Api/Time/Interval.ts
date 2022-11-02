@@ -1,4 +1,4 @@
-import { TickEvent, world } from "mojang-minecraft";
+import { TickEvent, world } from "@minecraft/server";
 
 export class TickInterval {
     protected event: (arg: TickEvent) => void

@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 import { Player } from "../Entity/index.js";
 import { Dimension } from "./Dimension.js";
 import { runCommand } from "../utils.js";

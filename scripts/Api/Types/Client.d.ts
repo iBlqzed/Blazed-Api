@@ -1,5 +1,5 @@
 export declare type ClientOptions = {
-    command: {
+    command?: {
         enabled?: boolean;
         /**
          * The command prefix

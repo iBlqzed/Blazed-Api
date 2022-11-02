@@ -31,7 +31,7 @@ export class Block {
      * @returns {string} The block's id
      */
     getId() {
-        return this.block.id;
+        return this.block.typeId;
     }
     /**
      * Get the block's location
@@ -74,7 +74,7 @@ export class Block {
      * @returns {boolean} Whether or not the block is empty
      */
     isEmpty() {
-        return this.block.id === "minecraft:air";
+        return this.block.typeId === "minecraft:air";
     }
     /**
      * Test for whether or not the block is waterlogged

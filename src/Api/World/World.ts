@@ -1,4 +1,4 @@
-import { EntityQueryOptions, world } from "mojang-minecraft";
+import { EntityQueryOptions, world } from "@minecraft/server";
 import { Player } from "../Entity/index.js";
 import { Dimension } from "./Dimension.js";
 import { Dimension as DimensionType } from "../Types/Dimension.js";

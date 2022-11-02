@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 import { PlayerLog } from "../Entity/Entity.js";
 export class PlayerLeave {
     constructor() {

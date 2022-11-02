@@ -1,4 +1,4 @@
-import { Enchantment, EnchantmentType, ItemEnchantsComponent, Items, ItemStack, MinecraftEnchantmentTypes } from "mojang-minecraft";
+import { Enchantment, EnchantmentType, ItemEnchantsComponent, Items, ItemStack, MinecraftEnchantmentTypes } from "@minecraft/server";
 import { Entity } from "../Entity/index.js";
 import { ItemComponents } from "../Types/index";
 
@@ -97,7 +97,7 @@ export class Item {
      * @returns {string} The item's id
      */
     getId(): string {
-        return this.itemStack.id
+        return this.itemStack.typeId
     }
     /**
      * Get the item stack

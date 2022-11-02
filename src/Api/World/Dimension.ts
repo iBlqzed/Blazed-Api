@@ -1,4 +1,4 @@
-import { Player as IPlayer, BlockLocation, BlockRaycastOptions, CommandResult, Dimension as IDimension, EntityQueryOptions, EntityRaycastOptions, ExplosionOptions, InventoryComponentContainer, Items, ItemStack, Location, Vector, world } from "mojang-minecraft";
+import { Player as IPlayer, BlockLocation, BlockRaycastOptions, CommandResult, Dimension as IDimension, EntityQueryOptions, EntityRaycastOptions, ExplosionOptions, InventoryComponentContainer, Items, ItemStack, Location, Vector, world } from "@minecraft/server";
 import { Block } from "../Block/index.js";
 import { Entity, Player } from "../Entity/index";
 import { Item } from "../Item/index";
@@ -46,7 +46,7 @@ export class Dimension {
      * @returns {Entity[]} All entities in the dimension
      */
     getEntities(options?: EntityQueryOptions): Entity[] {
-        return Array.from(this.dimension.getEntities(options), (eN) => eN.id !== "minecraft:player" ? new Entity(eN) : new Player(eN as IPlayer))
+        return Array.from(this.dimension.getEntities(options), (eN) => eN.typeId !== "minecraft:player" ? new Entity(eN) : new Player(eN as IPlayer))
     }
     /**
      * Get all entities at a location

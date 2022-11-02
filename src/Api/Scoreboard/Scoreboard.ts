@@ -1,4 +1,4 @@
-import { ScoreboardObjective } from "mojang-minecraft"
+import { ScoreboardObjective } from "@minecraft/server"
 import { Entity, Player } from "../Entity/index.js"
 import { ScoreboardEntity } from "../Types/index.js"
 
@@ -39,6 +39,6 @@ export class Scoreboard {
      */
     getScores(): ScoreboardEntity[] {
         //@ts-ignore
-        return this._scoreboard.getScores().map(e => { return { entity: e.participant.type === 'fakePlayer' ? e.participant.displayName : e.participant.getEntity().id === "minecraft:player" ? new Player(e.participant.getEntity()) : new Entity(e.participant.getEntity()), score: e.score } })
+        return this._scoreboard.getScores().map(e => { return { entity: e.participant.type === 'fakePlayer' ? e.participant.displayName : e.participant.getEntity().typeId === "minecraft:player" ? new Player(e.participant.getEntity()) : new Entity(e.participant.getEntity()), score: e.score } })
     }
 }

@@ -1,4 +1,4 @@
-import { BlockLocation, BlockRaycastOptions, CommandResult, Dimension as IDimension, EntityQueryOptions, EntityRaycastOptions, ExplosionOptions, Location, Vector } from "mojang-minecraft";
+import { BlockLocation, BlockRaycastOptions, CommandResult, Dimension as IDimension, EntityQueryOptions, EntityRaycastOptions, ExplosionOptions, Location, Vector } from "@minecraft/server";
 import { Block } from "../Block/index.js";
 import { Entity } from "../Entity/index";
 import { Item } from "../Item/index";

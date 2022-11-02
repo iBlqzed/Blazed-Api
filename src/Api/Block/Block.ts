@@ -1,4 +1,4 @@
-import { Block as IBlock, BlockLocation, BlockPermutation, BlockType, Location } from "mojang-minecraft"
+import { Block as IBlock, BlockLocation, BlockPermutation, BlockType, Location } from "@minecraft/server"
 import { locationFunctions } from "../utils"
 import { Dimension } from "../World/index"
 
@@ -34,7 +34,7 @@ export class Block {
      * @returns {string} The block's id
      */
     getId(): string {
-        return this.block.id
+        return this.block.typeId
     }
     /**
      * Get the block's location
@@ -77,7 +77,7 @@ export class Block {
      * @returns {boolean} Whether or not the block is empty
      */
     isEmpty(): boolean {
-        return this.block.id === "minecraft:air"
+        return this.block.typeId === "minecraft:air"
     }
     /**
      * Test for whether or not the block is waterlogged

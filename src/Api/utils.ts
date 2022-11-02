@@ -1,4 +1,4 @@
-import { world, BlockLocation, Location } from "mojang-minecraft";
+import { world, BlockLocation, Location, CommandResult, Dimension } from "@minecraft/server";
 import { Entity } from "./Entity/index";
 
 /**
@@ -80,15 +80,9 @@ export const locationFunctions = {
 /**
  * Run a command!
  * @param {string} cmd Command to run
- * @param {Entity} executor Entity to run the command
- * @returns {{ error: boolean, data: any }} Whether or not the command errors, and command data
+ * @param {Entity} executor Entity or Dimesion to run the command
  * @example runCommand(`give @s diamond`, player)
  */
-export function runCommand(cmd: string, executor?: Entity): { error: boolean, data: any } {
-    try {
-        if (executor) return { error: false, data: executor.runCommand(cmd) }
-        return { error: false, data: world.getDimension('overworld').runCommand(cmd) }
-    } catch (e) {
-        return { error: true, data: e }
-    }
+export function runCommand(cmd: string, executor?: Entity | Dimension): Promise<CommandResult> {
+    return (executor ?? world.getDimension("overworld")).runCommandAsync(cmd)
 }

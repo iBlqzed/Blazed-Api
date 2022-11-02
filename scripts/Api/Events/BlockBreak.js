@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 import { Player } from "../Entity/index.js";
 import { Block } from "../Block/index.js";
 export class BlockBreak {
@@ -21,7 +21,7 @@ export class BlockBreak {
                     player.dimension.getBlock(block.location).setPermutation(brokenBlockPermutation);
                     const e = world.events.tick.subscribe(() => {
                         world.events.tick.unsubscribe(e);
-                        player.dimension.getEntitiesAtBlockLocation(block.location).filter(entity => entity.id === 'minecraft:item').forEach(item => item.kill());
+                        player.dimension.getEntitiesAtBlockLocation(block.location).filter(entity => entity.typeId === 'minecraft:item').forEach(item => item.kill());
                     });
                 }
             });

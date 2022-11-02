@@ -1,4 +1,4 @@
-import { world } from "mojang-minecraft"
+import { world } from "@minecraft/server"
 import { Events } from "../Types/index.js"
 
 export class Tick {

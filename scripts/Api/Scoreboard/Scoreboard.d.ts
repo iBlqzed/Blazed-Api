@@ -1,4 +1,4 @@
-import { ScoreboardObjective } from "mojang-minecraft";
+import { ScoreboardObjective } from "@minecraft/server";
 import { Entity } from "../Entity/index.js";
 import { ScoreboardEntity } from "../Types/index.js";
 export declare class Scoreboard {

@@ -1,4 +1,4 @@
-import { Block as IBlock, BlockLocation, BlockPermutation, BlockType, Location } from "mojang-minecraft";
+import { Block as IBlock, BlockLocation, BlockPermutation, BlockType, Location } from "@minecraft/server";
 import { Dimension } from "../World/index";
 export declare class Block {
     protected readonly block: IBlock;

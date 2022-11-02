@@ -1,4 +1,4 @@
-import { Player as IPlayer, BlockRaycastOptions, CommandResult, Effect, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, XYRotation, BlockLocation } from "mojang-minecraft";
+import { Player as IPlayer, BlockRaycastOptions, CommandResult, Effect, Entity as IEntity, EntityRaycastOptions, IEntityComponent, Location, MinecraftEffectTypes, ScreenDisplay, Vector, XYRotation, BlockLocation } from "@minecraft/server";
 import { Block } from "../Block/Block.js";
 import { EntityInventory } from "../Inventory/index.js";
 import { Item } from "../Item/index.js";
@@ -142,6 +142,12 @@ export declare class Entity {
      */
     getTarget(): Entity;
     /**
+     * Get the entity's unique id
+     * @remarks This is different for every single entity
+     * @returns {string} The entity's unique id
+     */
+    getUniqueId(): string;
+    /**
      * Get the entity's velocity
      * @returns {Vector} The entity's velocity
      */
@@ -238,11 +244,6 @@ export declare class Entity {
      * @param {Vector} velocity New velocity for the entity
      */
     setVelocity(velocity: Vector): void;
-    /**
-     * Set the entity's target
-     * @param {Entity} entity The entity to be the new entity's target
-     */
-    setTarget(entity: Entity): void;
     teleport(location: Location | BlockLocation, dimension?: Dimension, xRot?: number, yRot?: number, keepVelocity?: boolean): void;
     /**
      * Trigger an entity event
@@ -371,7 +372,7 @@ export declare class Player extends Entity {
     kick(reason?: string): void;
     /**
      * Message the player
-     * @param {string} msg The message to send to the player
+     * @param {any} msg The message to send to the player
      */
     message(msg: any): void;
     /**
@@ -388,6 +389,7 @@ export declare class Player extends Entity {
      * Make the player run a command
      * @param {string} command Command to run (includes custom commands)
      * @returns {any} Command data + error
+     * @deprecated Soon to no longer work, try runCommandAsync
      */
     runCommand(command: string): {
         error: boolean;

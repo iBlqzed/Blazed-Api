@@ -1,4 +1,4 @@
-import { MessageFormData } from "mojang-minecraft-ui";
+import { MessageFormData } from "@minecraft/server-ui";
 /**
  * Create a new MessageForm
  */
